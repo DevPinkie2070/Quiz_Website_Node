@@ -1,0 +1,326 @@
+body {
+    background-color: #646464;
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: white;
+    /* Standardfarbe für den Text */
+    overflow-y: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+    /* Flexible Schriftgröße basierend auf Viewport-Breite */
+    margin: 0;
+}
+
+.start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #333;
+    width: 90%;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #3a3939;
+}
+
+.startbutton {
+    background-color: green;
+    font-family: "Lato", sans-serif;
+    border: 1px #fff solid;
+    border-radius: 5px;
+    height: 10vh;
+    /* Relative Höhe */
+    width: 20vw;
+    /* Relative Breite */
+    font-size: 1.5em;
+    /* Flexible Schriftgröße */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5vh auto;
+    /* Zentriert */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Sanfter Hover-Effekt */
+}
+
+.startbutton:hover {
+    background-color: rgb(3, 119, 3);
+}
+
+.startbutton:active {
+    background-color: rgb(2, 88, 2);
+}
+
+footer {
+    padding: 20px;
+    border-top: white 1px solid;
+    font-size: 1vw;
+    text-align: center;
+    margin-top: auto;
+    width: 95%;
+    /* Breite auf 100% des Viewports setzen */
+}
+
+.password-input {
+    height: 35px;
+    width: 30vw;
+    border: white 1px solid;
+    border-radius: 5px;
+    margin: 4px;
+    text-align: center;
+    font-size: 1em;
+    background: #4f4e4e;
+    color: white;
+}
+
+.password {
+    background: #333;
+    height: 200px;
+    width: 80%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    display: none;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #3a3939;
+}
+
+.password-button {
+    margin-top: 5px;
+    background: #4f4e4e;
+    border: 1px #fff solid;
+    color: white;
+    height: 30px;
+    width: 50px;
+    border-radius: 5px;
+}
+
+.password-button:hover {
+    background: #333;
+}
+
+.password-button:active {
+    background-color: #000000;
+}
+
+.error-message {
+    color: red;
+    font-size: 1em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin: 0px 5px;
+}
+
+.modis {
+    display: block;
+}
+
+.highscore-screen {
+    display: none;
+    text-align: center;
+    width: 400px;
+    height: 400px;
+    background-color: #333;
+    border-right: white 1px solid;
+    border-bottom: white 1px solid;
+    margin-right: 1550px;
+    margin-bottom: 600px;
+    position: absolute;
+    border-bottom-right-radius: 20px;
+}
+
+.modus {
+    height: 20vh;
+    /* Relative Höhe */
+    width: 20vw;
+    /* Relative Breite */
+    text-align: center;
+    border: #fff 1px solid;
+    border-radius: 20px;
+    margin: 5vh auto;
+    padding: 10px;
+    background-color: #333;
+    box-sizing: border-box;
+    /* Kein Layout-Shift durch Padding */
+}
+
+.modus-button {
+    color: white;
+    background-color: #4f4e4e;
+    border: white 1px solid;
+    border-radius: 5px;
+    height: 5vh;
+    padding: 0 10px;
+    margin-right: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Sanfter Hover-Effekt */
+}
+
+.modus-button:hover {
+    background-color: #242323;
+}
+
+.answer-button {
+    background-color: #333;
+    border: white 1px solid;
+    height: 30px;
+    width: 20vw;
+    color: white;
+    border-radius: 5px;
+    margin: 4px;
+}
+
+#answers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+}
+
+.answer-button {
+    background-color: #333;
+    border-radius: 5px;
+    color: white;
+    border: white 1px solid;
+    display: block;
+    width: 50%;
+    margin: 10px 0;
+    padding: 10px;
+    text-align: center;
+    transition: 50ms;
+}
+
+
+.answer-button:hover {
+    background-color: #242323;
+}
+
+.answer-button:active {
+    background-color: #000000;
+}
+
+.next-button {
+    color: white;
+    background: linear-gradient(to right, #333, #302f2f, #242323, #302f2f, #333);
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 90px;
+    height: 40px;
+    width: 30vw;
+    border: white 1px solid;
+    border-radius: 5px;
+    position: absolute;
+}
+
+.next-button-container {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.front-image {
+    height: auto;
+    max-width: 70%;
+    padding: 2px;
+    border: white 2px solid;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    object-fit: contain;
+}
+
+.question-screen {
+    background: #333;
+    text-align: center;
+    align-items: center;
+    height: 350px;
+    border: white 1px solid;
+    border-radius: 20px;
+    width: 43%;
+}
+
+.result-screen {
+    background: #333;
+    text-align: center;
+    align-items: center;
+    height: 300px;
+    border: white 1px solid;
+    width: 25%;
+    border-radius: 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.result-screen-content {
+    margin-top: 80px;
+}
+
+.restart-button {
+    color: white;
+    background: linear-gradient(to right, #333, #302f2f, #242323, #302f2f, #333);
+    margin: 5px;
+    height: 30px;
+    width: 20vw;
+    border: white 1px solid;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    header {
+        font-size: 6vw;
+    }
+
+    .startbutton {
+        width: 50%;
+        height: 8vh;
+        font-size: 1.2em;
+    }
+
+    footer {
+        font-size: 4vw;
+    }
+
+    .modus {
+        width: 70%;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        font-size: 10vw;
+    }
+
+    .startbutton {
+        width: 80%;
+        height: 7vh;
+        font-size: 1em;
+    }
+
+    footer {
+        font-size: 5vw;
+    }
+
+    .modus {
+        width: 90%;
+    }
+}
