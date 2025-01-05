@@ -34,7 +34,7 @@ header {
 }
 
 .startbutton {
-    background-color: green;
+    background-color: #333;
     font-family: "Lato", sans-serif;
     border: 1px #fff solid;
     border-radius: 5px;
@@ -52,14 +52,15 @@ header {
     cursor: pointer;
     transition: background-color 0.3s ease;
     /* Sanfter Hover-Effekt */
+    color: white;
 }
 
 .startbutton:hover {
-    background-color: rgb(3, 119, 3);
+    background-color: #2e2e2e;
 }
 
 .startbutton:active {
-    background-color: rgb(2, 88, 2);
+    background-color: #1d1d1d;
 }
 
 footer {

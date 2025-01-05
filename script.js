@@ -236,3 +236,7 @@ document.getElementById("restart-button").addEventListener("click", () => {
     resultScreen.style.display = 'none';
     document.getElementById('modis').style.display = 'block';
 });
+
+function goToQuiz() {
+    window.location('quiz.html');
+};

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz BvA</title>
-  <link rel="stylesheet" href="/quiz.css">
+  <link rel="stylesheet" href="static/quiz.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -14,6 +14,9 @@
 </head>
 <script src="script.js"></script>
 <body>
+
+  <button onclick="QuizTest()">Quiz Test</button>
+
 <!-- Startscreen -->
 <div class="start" id="start">
   <header>
@@ -345,6 +348,11 @@
     resultScreen.style.display = 'none';
     document.getElementById('modis').style.display = 'block';
   });
+
+  function QuizTest() {
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('modis').style.display = 'block';
+  }
 </script>
 </body>
 

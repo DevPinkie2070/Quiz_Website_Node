@@ -3,13 +3,22 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'd0424373',
-    password: 'XMrodFRJY2T7ZqCzhDo4',
-    database: 'd0424373'
+const db = mysql.createConnection({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME
 });
+
+// db.connect((err) => {
+//     if (err) {
+//         console.error('Datenbankverbindung fehlgeschlagen:', err);
+//         return;
+//     }
+//     console.log('Verbunden mit der Datenbank!');
+// });
 
 const app = express();
 
@@ -31,7 +40,7 @@ app.post('/auth', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
     if (username && password) {
-        connection.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
+        db.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
             if (error) throw error;
             if (results.length > 0) {
                 bcrypt.compare(password, results[0].password, function (err, result) {
@@ -64,14 +73,14 @@ app.post('/register', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
     if (username && password) {
-        connection.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
+        db.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
             if (error) throw error;
             if (results.length > 0) {
                 response.send('Username already exists!');
             } else {
                 bcrypt.hash(password, 10, function (err, hash) {
                     if (err) throw err;
-                    connection.query('INSERT INTO users (username, password, email, quiz_1, quiz_2, quiz_3) VALUES (?, ?, ?, 0, 0, 0)', [username, hash, ''], function (error, results, fields) {
+                    db.query('INSERT INTO users (username, password, email, quiz_1, quiz_2, quiz_3) VALUES (?, ?, ?, 0, 0, 0)', [username, hash, ''], function (error, results, fields) {
                         if (error) throw error;
                         response.redirect('/');
                     });
