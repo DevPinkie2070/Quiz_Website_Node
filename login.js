@@ -12,13 +12,13 @@ const db = mysql.createConnection({
     database: process.env.DATABASE_NAME
 });
 
-// db.connect((err) => {
-//     if (err) {
-//         console.error('Datenbankverbindung fehlgeschlagen:', err);
-//         return;
-//     }
-//     console.log('Verbunden mit der Datenbank!');
-// });
+db.connect((err) => {
+    if (err) {
+        console.error('Datenbankverbindung fehlgeschlagen:', err);
+        return;
+    }
+    console.log('Verbunden mit der Datenbank!');
+});
 
 const app = express();
 
