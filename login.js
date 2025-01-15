@@ -163,6 +163,17 @@ app.get('/user-data', function (request, response) {
     }
 });
 
+app.get('/all-user-data', function(request, response) {
+    if (request.session.loggedin) {
+        response.json({
+            username: request.session.username,
+            highscores: request.session.highscores
+        });
+    } else {
+        response.status(403).send('Not logged in');
+    }
+});
+
 app.get('/home', function (request, response) {
     if (request.session.loggedin) {
         response.send(`Welcome back, ${request.session.username}!`);
