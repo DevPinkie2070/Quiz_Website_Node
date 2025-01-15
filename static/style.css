@@ -4,18 +4,18 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #333;
+    background-color: rgb(181, 248, 235);
     margin: 0;
 }
 
 .login-register {
-    background: #262626;
+    background: rgba(118, 198, 184, 0.7);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
-    color: white;
+    color: black;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -32,20 +32,27 @@ input {
     margin-bottom: 10px;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid black;
     border-radius: 5px;
     outline: none;
     transition: border-color 0.3s ease;
-    color: white;
-    background: #262626;
+    color: black;
+    background: rgba(128, 209, 239, 0.7);
+    transition: background-color 1.0s ease;
+}
+
+input:focus {
+    background-color: black;
+    color: rgb(128, 209, 239);
 }
 
 .btn {
-
+    transition: background 1.0s ease;
 }
 
 .btn:hover {
-    background: #151515;
+    background: black;
+    color: rgb(128, 209, 239);
 }
 
 .btn:active {
@@ -55,16 +62,18 @@ input {
 button {
     padding: 10px;
     font-size: 16px;
-    background: #262626;
-    color: white;
+    background: rgba(128, 209, 239, 0.7);
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    border: 1px solid white;
+    border: 1px solid black;
+    transition: background 1.0s ease;
 }
 
 button:hover {
-    background: #151515;
+    background: black;
+    color: rgb(128, 209, 239);
 }
 
 button:active {

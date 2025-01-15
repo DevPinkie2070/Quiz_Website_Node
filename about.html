@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>About Us</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-    <link rel="stylesheet" href="static/about.css">
+    <link rel="stylesheet" href="/about.css">
 </head>
 <body>
     <header>
@@ -13,7 +13,7 @@
         </h1>
     </header>
     <nav>
-         <button class="btn" id="btn" onclick="tonextside('quiz.html')"><i class="fas fa-home"></i></button>
+         <button class="btn" id="btn" onclick="tonextside('/quiz')"><i class="fas fa-home"></i></button>
     </nav>
     <div class="staff-buttons">
         <button class="staff-button" id="staff-button1" onclick="showUser1()">Jannik</button> <br>
@@ -81,15 +81,6 @@
             user2.style.display = 'none';
             user3.style.display = 'none';
             user4.style.display = 'none';
-
-            document.getElementById('staff-button1').style.backgroundColor = 'white';
-            document.getElementById('staff-button2').style.backgroundColor = '#646464';
-            document.getElementById('staff-button3').style.backgroundColor = '#646464';
-            document.getElementById('staff-button4').style.backgroundColor = '#646464';
-            document.getElementById('staff-button1').style.color = 'black';
-            document.getElementById('staff-button2').style.color = 'white';
-            document.getElementById('staff-button3').style.color = 'white';
-            document.getElementById('staff-button4').style.color = 'white';
         }
 
         function showUser2() {
@@ -102,15 +93,6 @@
             user2.style.display = 'block';
             user3.style.display = 'none';
             user4.style.display = 'none';
-
-            document.getElementById('staff-button1').style.backgroundColor = '#646464';
-            document.getElementById('staff-button2').style.backgroundColor = 'white';
-            document.getElementById('staff-button3').style.backgroundColor = '#646464';
-            document.getElementById('staff-button4').style.backgroundColor = '#646464';
-            document.getElementById('staff-button1').style.color = 'white';
-            document.getElementById('staff-button2').style.color = 'black';
-            document.getElementById('staff-button3').style.color = 'white';
-            document.getElementById('staff-button4').style.color = 'white';
         }
 
         function showUser3() {
@@ -123,15 +105,6 @@
             user2.style.display = 'none';
             user3.style.display = 'block';
             user4.style.display = 'none';
-
-            document.getElementById('staff-button1').style.backgroundColor = '#646464';
-            document.getElementById('staff-button2').style.backgroundColor = '#646464';
-            document.getElementById('staff-button3').style.backgroundColor = 'white';
-            document.getElementById('staff-button4').style.backgroundColor = '#646464';
-            document.getElementById('staff-button1').style.color = 'white';
-            document.getElementById('staff-button2').style.color = 'white';
-            document.getElementById('staff-button3').style.color = 'black';
-            document.getElementById('staff-button4').style.color = 'white';
         }
 
         function showUser4() {
@@ -144,15 +117,6 @@
             user2.style.display = 'none';
             user3.style.display = 'none';
             user4.style.display = 'block';
-
-            document.getElementById('staff-button1').style.backgroundColor = '#646464';
-            document.getElementById('staff-button2').style.backgroundColor = '#646464';
-            document.getElementById('staff-button3').style.backgroundColor = '#646464';
-            document.getElementById('staff-button4').style.backgroundColor = 'white';
-            document.getElementById('staff-button1').style.color = 'white';
-            document.getElementById('staff-button2').style.color = 'white';
-            document.getElementById('staff-button3').style.color = 'white';
-            document.getElementById('staff-button4').style.color = 'black';
         }
     </script>
 </body>

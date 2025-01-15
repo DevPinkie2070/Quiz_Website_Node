@@ -5,9 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz BvA</title>
-  <link rel="stylesheet" href="static/quiz.css">
+  <link rel="stylesheet" href="/quiz.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
   <link
           href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
           rel="stylesheet">
@@ -15,55 +16,62 @@
 <script src="script.js"></script>
 <body>
 
-  <button onclick="QuizTest()">Quiz Test</button>
 
-<!-- Startscreen -->
+  <button class="logout" id="logout" onclick="work()" style="display: none;">
+    <i class="fa-solid fa-right-from-bracket"></i>
+  </button>
+
+
+
 <div class="start" id="start">
   <header>
     <h1>Quiz</h1>
   </header>
   <button class="startbutton" onclick="hideStart()">Start</button>
   <footer>
-    About Us
+    <button class="about" id="gotoAbout" onclick="tonextside('/about')">About us</button> | <button class="about" id="gotoAbout" onclick="tonextside('/leaderboard')">Leaderboard</button>
   </footer>
 </div>
 
-<!-- Modus-Auswahl -->
+
 <div class="modis" id="modis" style="display: none;">
   <header>
-    <h1>Wähle einen Modus</h1>
+    <h1>Hallo <span id="username-display">Username</span>, wähle einen Modus</h1>
   </header>
+  <br>
   <ul data-orientation="vertical" data-position="top">
     <div class="modus">
       <h2>Logos</h2>
+        <span id="logos-score">Logos</span>
       <br>
       <button class="modus-button" onclick="startModi1()">Starte Quiz</button>
     </div>
     <div class="modus">
       <h2>Allgemein Wissen</h2>
+      <span id="general-score">Allgemein Wissen</span>
       <br>
       <button class="modus-button" onclick="startModi2()">Starte Quiz</button>
     </div>
     <div class="modus">
       <h2>Wissen der IT</h2>
+      <span id="it-score">IT</span>
       <br>
       <button class="modus-button" onclick="startModi3()">Starte Quiz</button>
     </div>
   </ul>
 </div>
 
-<!-- Fragebildschirm -->
+
 <div class="question-screen" id="question-screen" style="display: none;">
   <h2 id="question-text">Frage hier anzeigen</h2>
   <div class="answers-container" id="answers-container">
-    <!-- Dynamische Antworten -->
   </div>
   <div class="next-button-container">
     <button id="next-button" style="display: none;" class="next-button">Nächste Frage</button>
   </div>
 </div>
 
-<!-- Ergebnisscreen -->
+
 <div id="result-screen" class="result-screen" style="display: none;">
   <div class="result-screen-content">
     <h2>Ergebnis</h2>
@@ -72,22 +80,18 @@
   </div>
 </div>
 
-<!-- Highscore-Bereich -->
-<div id="highscore-screen" class="highscore-screen">
-  <h1>Willkommen, <span id="username-display">Benutzername</span>!</h1>
-  <br>
-  <p>Logos</p>
-  <span id="logos-score">Highscore</span>
-  <br><br>
-  <p>Allgemein Wissen</p>
-  <span id="general-score">Highscore</span>
-  <br><br>
-  <p>Informatik</p>
-  <span id="it-score">Highscore</span>
-</div>
 
-<!-- JavaScript -->
+
 <script>
+
+function tonextside(side) {
+  window.location.href = side;
+}
+
+function work() {
+  alert('Diese funktion ist aktuell in Arbeit.')
+}
+
   document.addEventListener("DOMContentLoaded", function () {
     fetch('/user-data')
             .then(response => {
@@ -97,7 +101,6 @@
               return response.json();
             })
             .then(data => {
-              // Setze den Benutzernamen und die Highscores
               document.getElementById('username-display').textContent = data.username;
               document.getElementById('logos-score').textContent = data.highscores.quiz_1 || 0;
               document.getElementById('general-score').textContent = data.highscores.quiz_2 || 0;
@@ -106,10 +109,10 @@
             .catch(error => {
               console.error('Error:', error);
               alert('Bitte loggen Sie sich ein, um das Quiz zu starten.');
-              window.location.href = '/'; // Zurück zur Login-Seite
+              window.location.href = '/';
             });
   });
-  // Fragen-Sets
+
   const questions = [
     {
       question: 'Was ist die Hauptstadt von Deutschland?',
@@ -164,6 +167,51 @@
       answers: ["Informatik Technologie", "Informations Technologie", "Info Text"],
       correct: 1
     },
+    {
+      question: "Wie viele Ozeane gibt es ?",
+      answers: ["2", "10", "5", "7"],
+      correct: 2
+    },
+    {
+      question: "Wann hat der erste Weltkrieg begonnen?",
+      answers: ["1914", "1899", "1916", "1970"],
+      correct: 0
+    },
+    {
+      question: "Welches Land hat die meisten Nachbarländer?",
+      answers: ["Russland", "Deutschland", "Frankreich", "China"],
+      correct: 3
+    },
+    {
+      question: "Wer war der erste Präsident der Vereinigten Staaten?",
+      answers: ["George Washington", "Thomas Jefferson", "James Madison", "Andrew Jackson"],
+      correct: 0
+    },
+    {
+      question: "Wann wurde der Euro eingeführt?",
+      answers: ["1980", "2002", "2000", "2010"],
+      correct: 1
+    },
+    {
+      question: "Was ist die Hauptstadt von Brasilien?",
+      answers: ["Brasilia", "Sao Paulo", "Porto Algere", "Rio de Janeiro"],
+      correct: 0
+    },
+    {
+      question: "Wie viele Spieler hat ein Fußball Team auf dem Feld?",
+      answers: ["14", "12", "11", "10"],
+      correct: 2
+    },
+    {
+      question: "Welche Farbe hat der Hut von Super Mario?",
+      answers: ["Gelb", "Rot", "Grün", "Blau"],
+      correct: 1
+    },
+    {
+      question: "Was ist die Hauptstadt von Australien?",
+      answers: ["Sydney", "Brasilia", "Melbourne", "Canberra"],
+      correct: 3
+    }
   ];
 
   const questions3 = [
@@ -224,12 +272,10 @@
     },
   ];
 
-  // Globale Variablen
-  let currentQuestions = []; // Enthält das aktuell ausgewählte Fragen-Set
+  let currentQuestions = [];
   let currentQuestionIndex = 0;
   let score = 0;
 
-  // Referenzen auf DOM-Elemente
   const questionScreen = document.getElementById("question-screen");
   const resultScreen = document.getElementById("result-screen");
   const questionText = document.getElementById("question-text");
@@ -237,33 +283,31 @@
   const nextButton = document.getElementById("next-button");
   const scoreText = document.getElementById("score-text");
 
-  // Modi auswählen
   function hideStart() {
     document.getElementById('start').style.display = 'none';
-    document.getElementById('modis').style.display = 'block';
-    document.getElementById('highscore-screen').style.display = 'block';
-    //document.getElementById('password').style.display = 'block';
+    document.getElementById('modis').style.display = 'flex';
+    document.getElementById('highscore-screen').style.display = 'none';
+    document.getElementById('logout').style.display = 'flex';
   }
 
   function startModi1() {
     document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions; // Setze das Fragen-Set für Modi 1
+    currentQuestions = questions;
     startQuiz();
   }
 
   function startModi2() {
     document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions2; // Setze das Fragen-Set für Modi 2
+    currentQuestions = questions2;
     startQuiz();
   }
 
   function startModi3() {
     document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions3; // Setze das Fragen-Set für Modi 3
+    currentQuestions = questions3;
     startQuiz();
   }
 
-  // Quiz starten
   function startQuiz() {
     questionScreen.style.display = 'block';
     resultScreen.style.display = 'none';
@@ -276,26 +320,24 @@
     const currentQuestion = currentQuestions[currentQuestionIndex];
     questionText.textContent = currentQuestion.question;
 
-    // Styling des Containers für Zentrierung
     const answersContainer = document.getElementById("answers-container");
     answersContainer.style.display = "flex";
     answersContainer.style.flexDirection = "column";
     answersContainer.style.alignItems = "center";
     answersContainer.style.justifyContent = "center";
-    answersContainer.style.height = "80%"; // Höhe des Containers setzen
+    answersContainer.style.height = "80%";
 
-    answersContainer.innerHTML = ""; // Vorherige Inhalte löschen
+    answersContainer.innerHTML = "";
 
     currentQuestion.answers.forEach((answer, index) => {
       const button = document.createElement("button");
       button.textContent = answer;
       button.classList.add("answer-button");
 
-      // Styling für die Buttons
       button.style.display = "block";
-      button.style.width = "50%"; // Breite der Buttons
-      button.style.margin = "10px 0"; // Abstand zwischen Buttons
-      button.style.padding = "10px"; // Größere Klickflächen
+      button.style.width = "50%";
+      button.style.margin = "10px 0";
+      button.style.padding = "10px";
 
       button.addEventListener("click", () => selectAnswer(index));
       answersContainer.appendChild(button);
@@ -304,15 +346,11 @@
     nextButton.style.display = 'none';
   }
 
-
-
-  // Antwort prüfen
   function selectAnswer(selectedIndex) {
     const currentQuestion = currentQuestions[currentQuestionIndex];
     if (selectedIndex === currentQuestion.correct) {
       score++;
     }
-    //nextButton.style.display = 'block';
     nextQuestion();
   }
 
@@ -325,7 +363,6 @@
     }
   }
 
-
   nextButton.addEventListener("click", () => {
     currentQuestionIndex++;
     if (currentQuestionIndex < currentQuestions.length) {
@@ -335,23 +372,20 @@
     }
   });
 
-  // Ergebnisse anzeigen
   function showResults() {
     questionScreen.style.display = 'none';
     resultScreen.style.display = 'block';
     scoreText.textContent = `Du hast ${score} von ${currentQuestions.length} Fragen richtig beantwortet.`;
   }
 
-  // Quiz neu starten
   document.getElementById("restart-button").addEventListener("click", () => {
     questionScreen.style.display = 'none';
     resultScreen.style.display = 'none';
     document.getElementById('modis').style.display = 'block';
   });
 
-  function QuizTest() {
-    document.getElementById('start').style.display = 'none';
-    document.getElementById('modis').style.display = 'block';
+  function gotoAbout() {
+    window.location.href('/about')
   }
 </script>
 </body>

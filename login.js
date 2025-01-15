@@ -5,21 +5,57 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 
-dotenv.config();
+function createDatabaseConnection() {
+    let connection;
 
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_DATABASE
-});
+    const connect = () => {
+        connection = mysql.createConnection({
+            host: 'w01d3373.kasserver.com',
+            user: 'd0424373',
+            password: 'XMrodFRJY2T7ZqCzhDo4',
+            database: 'd0424373'
+        });
 
-db.connect((err) => {
+        connection.connect(err => {
+            if (err) {
+                console.error('Fehler beim Verbinden zur Datenbank:', err.message);
+                console.log('Erneuter Verbindungsversuch in 5 Sekunden...');
+                setTimeout(connect, 5000); 
+            } else {
+                console.log('Erfolgreich mit der Datenbank verbunden!');
+            }
+        });
+
+        connection.on('error', err => {
+            console.error('Datenbankfehler:', err.message);
+
+            if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+                console.log('Verbindung verloren. Versuche erneut zu verbinden...');
+                connect();
+            } else if (err.code === 'ECONNRESET') {
+                console.log('Verbindung zurückgesetzt. Erneuter Verbindungsversuch...');
+                connect();
+            } else if (err.fatal) {
+                console.error('Schwerwiegender Fehler. Anwendung wird beendet.');
+                process.exit(1);
+            } else {
+                console.error('Unerwarteter Fehler:', err);
+            }
+        });
+    };
+
+    connect();
+
+    return connection;
+}
+
+const db = createDatabaseConnection();
+
+db.query('SELECT 1 + 1 AS result', (err, results) => {
     if (err) {
-        console.error('Datenbankverbindung fehlgeschlagen:', err);
-        return;
+        return console.error('Fehler bei der Abfrage:', err.message);
     }
-    console.log('Verbunden mit der Datenbank!');
+    console.log('Abfrageergebnis:', results);
 });
 
 const app = express();
@@ -37,7 +73,6 @@ app.get('/', function (request, response) {
     response.sendFile(path.join(__dirname + '/index.html'));
 });
 
-// Login functionality
 app.post('/auth', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
@@ -50,7 +85,6 @@ app.post('/auth', function (request, response) {
                         request.session.loggedin = true;
                         request.session.username = username;
 
-                        // Store scores in session
                         request.session.highscores = {
                             quiz_1: results[0].quiz_1,
                             quiz_2: results[0].quiz_2,
@@ -102,6 +136,22 @@ app.get('/quiz', function (request, response) {
     }
 });
 
+app.get('/leaderboard', function (request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/leaderboard.html'));
+    } else {
+        response.redirect('/');
+    }
+});
+
+app.get('/about', function(request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/about.html'));
+    } else {
+        response.redirect('/');
+    }
+})
+
 app.get('/user-data', function (request, response) {
     if (request.session.loggedin) {
         response.json({
@@ -120,8 +170,6 @@ app.get('/home', function (request, response) {
         response.send('Please login to view this page!');
     }
 });
-
-
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');

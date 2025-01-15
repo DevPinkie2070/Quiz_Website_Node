@@ -1,5 +1,5 @@
 body {
-    background-color: #646464;
+    background-color: rgb(181, 248, 235);
     font-family: "Lato", sans-serif;
     font-style: normal;
     display: flex;
@@ -9,8 +9,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    color: white;
-    /* Standardfarbe für den Text */
+    color: black;
     overflow-y: hidden;
 }
 
@@ -18,7 +17,6 @@ header {
     text-align: center;
     padding: 20px;
     font-size: 30px;
-    /* Flexible Schriftgröße basierend auf Viewport-Breite */
     margin: 0;
 }
 
@@ -27,36 +25,32 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #333;
+    background-color: rgba(118, 198, 184, 0.7);
     width: 90%;
     border-radius: 20px;
     box-shadow: 0 0 10px #3a3939;
 }
 
 .startbutton {
-    background-color: #333;
+    background-color: rgba(128, 209, 239, 0.7);
     font-family: "Lato", sans-serif;
-    border: 1px #fff solid;
+    border: 1px black solid;
     border-radius: 5px;
     height: 10vh;
-    /* Relative Höhe */
     width: 20vw;
-    /* Relative Breite */
     font-size: 1.5em;
-    /* Flexible Schriftgröße */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 5vh auto;
-    /* Zentriert */
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    /* Sanfter Hover-Effekt */
-    color: white;
+    transition: background-color 1s ease;
+    color: black;
 }
 
 .startbutton:hover {
-    background-color: #2e2e2e;
+    background-color: black;
+    color: rgb(128, 209, 239);
 }
 
 .startbutton:active {
@@ -65,24 +59,24 @@ header {
 
 footer {
     padding: 20px;
-    border-top: white 1px solid;
+    border-top: black 1px solid;
     font-size: 1vw;
     text-align: center;
     margin-top: auto;
     width: 95%;
-    /* Breite auf 100% des Viewports setzen */
+    color: black;
 }
 
 .password-input {
     height: 35px;
     width: 30vw;
-    border: white 1px solid;
+    border: black 1px solid;
     border-radius: 5px;
     margin: 4px;
     text-align: center;
     font-size: 1em;
-    background: #4f4e4e;
-    color: white;
+    background: rgba(128, 209, 239, 0.7);
+    color: black;
 }
 
 .password {
@@ -125,7 +119,13 @@ footer {
 }
 
 .modis {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modis h1 {
+    margin-top: 10vh;
 }
 
 .highscore-screen {
@@ -143,24 +143,43 @@ footer {
 }
 
 .modus {
-    height: 20vh;
-    /* Relative Höhe */
+    height: 25vh;
     width: 20vw;
-    /* Relative Breite */
     text-align: center;
     border: #fff 1px solid;
     border-radius: 20px;
-    margin: 5vh auto;
+    margin: 10px;
     padding: 10px;
-    background-color: #333;
+    background-color: rgba(118, 198, 184, 0.7);
     box-sizing: border-box;
-    /* Kein Layout-Shift durch Padding */
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.modis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.modis .modus {
+    flex: 1 1 30%;
+    margin: 10px;
+}
+
+.modus span {
+    display: block;
+    font-size: 1.2em;
+    color: black;
+    margin-top: 10px;
 }
 
 .modus-button {
-    color: white;
-    background-color: #4f4e4e;
-    border: white 1px solid;
+    color: black;
+    background-color: rgba(128, 209, 239, 0.7);
+    border: black 1px solid;
     border-radius: 5px;
     height: 5vh;
     padding: 0 10px;
@@ -168,21 +187,22 @@ footer {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    /* Sanfter Hover-Effekt */
 }
 
 .modus-button:hover {
-    background-color: #242323;
+    background-color: black;
+    color: rgb(128, 209, 239);
 }
 
 .answer-button {
-    background-color: #333;
-    border: white 1px solid;
+    background-color: rgba(128, 209, 239, 0.7);
+    border: black 1px solid;
     height: 30px;
     width: 20vw;
-    color: white;
+    color: black;
     border-radius: 5px;
     margin: 4px;
+    transition: background-color 1.0s ease;
 }
 
 #answers-container {
@@ -191,33 +211,28 @@ footer {
     align-items: center;
     justify-content: center;
     height: 80%;
+    background-color: rgba(118, 198, 184, 0.7);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top: #fff 1px solid;
 }
-
-.answer-button {
-    background-color: #333;
-    border-radius: 5px;
-    color: white;
-    border: white 1px solid;
-    display: block;
-    width: 50%;
-    margin: 10px 0;
-    padding: 10px;
-    text-align: center;
-    transition: 50ms;
-}
-
 
 .answer-button:hover {
-    background-color: #242323;
+    background-color: black;
+    color: rgb(128, 209, 239);
 }
 
 .answer-button:active {
     background-color: #000000;
 }
 
+.question-screen {
+    background-color: none;
+}
+
 .next-button {
-    color: white;
-    background: linear-gradient(to right, #333, #302f2f, #242323, #302f2f, #333);
+    color: black;
+    background-color: rgba(128, 209, 239, 0.7);
     margin: 5px;
     align-items: center;
     justify-content: center;
@@ -234,7 +249,6 @@ footer {
     text-align: center;
     align-items: center;
     justify-content: center;
-
 }
 
 .front-image {
@@ -248,7 +262,7 @@ footer {
 }
 
 .question-screen {
-    background: #333;
+    background: rgba(118, 198, 184, 0.7);
     text-align: center;
     align-items: center;
     height: 350px;
@@ -258,7 +272,7 @@ footer {
 }
 
 .result-screen {
-    background: #333;
+    background: rgba(118, 198, 184, 0.7);
     text-align: center;
     align-items: center;
     height: 300px;
@@ -276,13 +290,41 @@ footer {
 }
 
 .restart-button {
-    color: white;
-    background: linear-gradient(to right, #333, #302f2f, #242323, #302f2f, #333);
+    color: black;
+    background: rgba(128, 209, 239, 0.7);
     margin: 5px;
     height: 30px;
     width: 20vw;
     border: white 1px solid;
     border-radius: 5px;
+    transition: background 1s ease;
+}
+
+.restart-button:hover {
+    color: rgb(128, 209, 239);
+    background: black;
+}
+
+.about {
+    background: none;
+    color: black;
+    border: none;
+    transition: color 0.5s ease;
+}
+
+.about:hover {
+    color: #077097;
+}
+
+.about:active {
+    
+}
+
+.logout {
+    color: black;
+    background: none;
+    border: none;
+    display: 1;
 }
 
 @media (max-width: 768px) {
