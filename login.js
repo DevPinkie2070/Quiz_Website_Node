@@ -233,23 +233,27 @@ app.post('/save-score', function(request, response) {
 
   app.get('/leaderboarddata', (req, res) => {
     const quiz = req.query.quiz; // quiz_1, quiz_2, quiz_3
-  
+
     // Eingabe validieren
     if (!['quiz_1', 'quiz_2', 'quiz_3'].includes(quiz)) {
-      return res.status(400).send('Ungültiges Quiz.');
+        return res.status(400).send('Ungültiges Quiz.');
     }
-  
-    // Abfrage basierend auf dem gewünschten Quiz
+
+    // Abfrage basierend auf dem gewünschten Quiz, Benutzer mit role = 1 ausschließen
     const query = `
-      SELECT username, ${quiz} AS score
-      FROM users
-      ORDER BY ${quiz} DESC
-      LIMIT 10
+        SELECT username, ${quiz} AS score
+        FROM users
+        WHERE role != 1
+        ORDER BY ${quiz} DESC
+        LIMIT 10
     `;
-  
+
     db.query(query, (err, results) => {
-      if (err) throw err;
-      res.json(results);
+        if (err) {
+            console.error('Fehler bei der Abfrage:', err.message);
+            return res.status(500).send('Interner Serverfehler');
+        }
+        res.json(results);
     });
 });
 
