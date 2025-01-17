@@ -231,17 +231,6 @@ app.post('/save-score', function(request, response) {
     });
   });
 
-app.get('/get-questions', (req, res) => {
-    fs.readFile(path.join(__dirname, 'questions.json'), 'utf8', (err, data) => {
-      if (err) {
-        console.error('Fehler beim Laden der Fragen:', err);
-        return res.status(500).send('Fehler beim Laden der Fragen');
-      }
-  
-      res.json(JSON.parse(data)); // Fragen als JSON zurücksenden
-    });
-  });
-
   app.get('/leaderboarddata', (req, res) => {
     const quiz = req.query.quiz; // quiz_1, quiz_2, quiz_3
   

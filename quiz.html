@@ -1,393 +1,390 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz BvA</title>
   <link rel="stylesheet" href="/quiz.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
-  <link
-          href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-          rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap" rel="stylesheet">
+  <style>
+    .correct {
+      background-color: green;
+      color: white;
+    }
+
+    .incorrect {
+      background-color: red;
+      color: white;
+    }
+
+    .error-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: red;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    .logout {
+      display: none;
+    }
+
+    #logout {
+      display: none;
+    }
+  </style>
 </head>
-<script src="script.js"></script>
 <body>
-
-
-  <button class="logout" id="logout" onclick="work()" style="display: none;">
-    <i class="fa-solid fa-right-from-bracket"></i>
+  <button class="logout" id="logout" onclick="logout()" style="display: none;">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
   </button>
 
-
-
-<div class="start" id="start">
-  <header>
-    <h1>Quiz</h1>
-  </header>
-  <button class="startbutton" onclick="hideStart()">Start</button>
-  <footer>
-  <button class="about" id="gotoAbout" onclick="tonextside('/quiz/leaderboard')">Leaderboard</button>
-  </footer>
-</div>
-
-
-<div class="modis" id="modis" style="display: none;">
-  <header>
-    <h1>Hallo <span id="username-display">Username</span>, wähle einen Modus</h1>
-  </header>
-  <br>
-  <ul data-orientation="vertical" data-position="top">
-    <div class="modus">
-      <h2>Logos</h2>
-        <span id="logos-score">Logos</span>
-      <br>
-      <button class="modus-button" onclick="startModi1()">Starte Quiz</button>
-    </div>
-    <div class="modus">
-      <h2>Allgemein Wissen</h2>
-      <span id="general-score">Allgemein Wissen</span>
-      <br>
-      <button class="modus-button" onclick="startModi2()">Starte Quiz</button>
-    </div>
-    <div class="modus">
-      <h2>Informatik</h2>
-      <span id="it-score">IT</span>
-      <br>
-      <button class="modus-button" onclick="startModi3()">Starte Quiz</button>
-    </div>
-  </ul>
-</div>
-
-
-<div class="question-screen" id="question-screen" style="display: none;">
-  <h2 id="question-text">Frage hier anzeigen</h2>
-  <div class="answers-container" id="answers-container">
+  <div class="start" id="start">
+    <header>
+      <h1>Quiz</h1>
+    </header>
+    <button class="startbutton" onclick="hideStart()">Start</button>
+    <footer>
+      <button class="about" id="gotoLeaderboard" onclick="toNextSide('/quiz/leaderboard')">Leaderboard</button>
+    </footer>
   </div>
-  <div class="next-button-container">
-    <button id="next-button" style="display: none;" class="next-button">Nächste Frage</button>
+
+  <div class="modis" id="modis" style="display: none;">
+    <header>
+      <h1>Hallo <span id="username-display">Username</span>, wähle einen Modus:</h1>
+    </header>
+    <ul>
+      <div class="modus">
+        <h2>Logos</h2>
+        <span id="quiz_1-score">0</span>
+        <br>
+        <button class="modus-button" onclick="startModi('quiz_1')">Starte Quiz</button>
+      </div>
+      <div class="modus">
+        <h2>Allgemeinwissen</h2>
+        <span id="quiz_2-score">0</span>
+        <br>
+        <button class="modus-button" onclick="startModi('quiz_2')">Starte Quiz</button>
+      </div>
+      <div class="modus">
+        <h2>Informatik</h2>
+        <span id="quiz_3-score">0</span>
+        <br>
+        <button class="modus-button" onclick="startModi('quiz_3')">Starte Quiz</button>
+      </div>
+    </ul>
   </div>
-</div>
 
+  <div class="question-screen" id="question-screen" style="display: none;">
+    <h2 id="question-text">Frage wird geladen...</h2>
+    <div id="answers-container"></div>
+    <button id="next-button" class="next-button" style="display: none;">Nächste Frage</button>
+  </div>
 
-<div id="result-screen" class="result-screen" style="display: none;">
-  <div class="result-screen-content">
+  <div id="result-screen" class="result-screen" style="display: none;">
     <h2>Ergebnis</h2>
     <p id="score-text"></p>
-    <button id="restart-button" class="restart-button" onclick="restartQuiz()">Zurück zur Modus Auswahl</button>
+    <button onclick="restartQuiz()" class="restart-button">Zurück zur Modus-Auswahl</button>
   </div>
-</div>
 
-
-
-<script>
-
-function tonextside(side) {
-  window.location.href = side;
+  <script>
+function showError(message) {
+  const errorBox = document.createElement('div');
+  errorBox.className = 'error-box';
+  errorBox.textContent = message;
+  document.body.appendChild(errorBox);
+  setTimeout(() => errorBox.remove(), 3000);
 }
 
-function work() {
-  alert('Diese funktion ist aktuell in Arbeit.')
+function logout() {
+  toNextSide('/');
 }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    fetch('/user-data')
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Not logged in');
-              }
-              return response.json();
-            })
-            .then(data => {
-              document.getElementById('username-display').textContent = data.username;
-              document.getElementById('logos-score').textContent = data.highscores.quiz_1 || 0;
-              document.getElementById('general-score').textContent = data.highscores.quiz_2 || 0;
-              document.getElementById('it-score').textContent = data.highscores.quiz_3 || 0;
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              alert('Bitte loggen Sie sich ein, um das Quiz zu starten.');
-              window.location.href = '/';
-            });
-  });
-
-  const questions = [
+const questions1 = [
     {
-      question: 'Was ist die Hauptstadt von Deutschland?',
-      answers: ["Berlin", "München", "Hamburg", "Köln"],
-      correct: 0
+        question: "Was ist das Logo von Apple?",
+        answers: ["Apfel", "Birne", "Banane", "Traube"],
+        correct: 0
     },
     {
-      question: "Wie viele Kontinente gibt es?",
-      answers: ["5", "6", "7", "8"],
-      correct: 2
+        question: "Was ist die Hauptstadt von Deutschland?",
+        answers: ["Berlin", "München", "Hamburg", "Köln"],
+        correct: 0
     },
     {
-      question: "Welche Automarke hat ein Pferd als Logo?",
-      answers: ["Ferrari", "Ford", "Volkswagen", "Nissan"],
-      correct: 0
+        question: "Wie viele Kontinente gibt es?",
+        answers: ["5", "6", "7", "8"],
+        correct: 2
     },
     {
-      question: "Wie viele Bundesländer hat Deutschland?",
-      answers: ["4", "19", "20", "16"],
-      correct: 3
-    },
-  ];
-
-  const questions2 = [
-    {
-      question: 'Was ist die Hauptstadt von Deutschland?',
-      answers: ["Berlin", "München", "Hamburg", "Köln"],
-      correct: 0
+        question: "Welche Automarke hat ein Pferd als Logo?",
+        answers: ["Ferrari", "Ford", "Volkswagen", "Nissan"],
+        correct: 0
     },
     {
-      question: "Wie viele Kontinente gibt es?",
-      answers: ["5", "6", "7", "8"],
-      correct: 2
-    },
-    {
-      question: "Welche Automarke hat ein Pferd als Logo?",
-      answers: ["Ferrari", "Ford", "Volkswagen", "Nissan"],
-      correct: 0
-    },
-    {
-      question: "Wie viele Bundesländer hat Deutschland?",
-      answers: ["4", "19", "20", "16"],
-      correct: 3
-    },
-    {
-      question: "Wie viele Knochen hat ein Mensch?",
-      answers: ["207", "206", "311", "261"],
-      correct: 1
-    },
-    {
-      question: "Was heißt IT?",
-      answers: ["Informatik Technologie", "Informations Technologie", "Info Text"],
-      correct: 1
-    },
-    {
-      question: "Wie viele Ozeane gibt es ?",
-      answers: ["2", "10", "5", "7"],
-      correct: 2
-    },
-    {
-      question: "Wann hat der erste Weltkrieg begonnen?",
-      answers: ["1914", "1899", "1916", "1970"],
-      correct: 0
-    },
-    {
-      question: "Welches Land hat die meisten Nachbarländer?",
-      answers: ["Russland", "Deutschland", "Frankreich", "China"],
-      correct: 3
-    },
-    {
-      question: "Wer war der erste Präsident der Vereinigten Staaten?",
-      answers: ["George Washington", "Thomas Jefferson", "James Madison", "Andrew Jackson"],
-      correct: 0
-    },
-    {
-      question: "Wann wurde der Euro eingeführt?",
-      answers: ["1980", "2002", "2000", "2010"],
-      correct: 1
-    },
-    {
-      question: "Was ist die Hauptstadt von Brasilien?",
-      answers: ["Brasilia", "Sao Paulo", "Porto Algere", "Rio de Janeiro"],
-      correct: 0
-    },
-    {
-      question: "Wie viele Spieler hat ein Fußball Team auf dem Feld?",
-      answers: ["14", "12", "11", "10"],
-      correct: 2
-    },
-    {
-      question: "Welche Farbe hat der Hut von Super Mario?",
-      answers: ["Gelb", "Rot", "Grün", "Blau"],
-      correct: 1
-    },
-    {
-      question: "Was ist die Hauptstadt von Australien?",
-      answers: ["Sydney", "Brasilia", "Melbourne", "Canberra"],
-      correct: 3
+        question: "Wie viele Bundesländer hat Deutschland?",
+        answers: ["4", "19", "20", "16"],
+        correct: 3
     }
-  ];
+];
 
-  const questions3 = [
+const questions2 = [
     {
-      question: "Was ist die Dateiendung für C++?",
-      answers: ["c", "c++", "cpp", "cpps"],
-      correct: 2
+        question: "Was ist die Hauptstadt von Deutschland?",
+        answers: ["Berlin", "München", "Hamburg", "Köln"],
+        correct: 0
     },
     {
-      question: "Was davon ist keine Programmiersprache?",
-      answers: ["Java", "Python", "HTML", "C#"],
-      correct: 2
+        question: "Wie viele Kontinente gibt es?",
+        answers: ["5", "6", "7", "8"],
+        correct: 2
     },
     {
-      question: "Welcher HTML Tag ist für eine große Überschrift?",
-      answers: ["<p>", "<h1>", "<ul>", "<input>"],
-      correct: 1
+        question: "Welche Automarke hat ein Pferd als Logo?",
+        answers: ["Ferrari", "Ford", "Volkswagen", "Nissan"],
+        correct: 0
     },
     {
-      question: "Was davon ist JavaScript?",
-      answers: ["print()", "console.log()"],
-      correct: 1
+        question: "Wie viele Bundesländer hat Deutschland?",
+        answers: ["4", "19", "20", "16"],
+        correct: 3
     },
     {
-      question: "Was davon ist ein Frontend Framework?",
-      answers: ["Angular", "node.js", "Webstorm", "mysql"],
-      correct: 0,
+        question: "Wie viele Knochen hat ein Mensch?",
+        answers: ["207", "206", "311", "261"],
+        correct: 1
     },
     {
-      question: "Bedeutet VPN Virtual Private Network?",
-      answers: ["Ja", "Nein"],
-      correct: 0,
+        question: "Was heißt IT?",
+        answers: ["Informatik Technologie", "Informations Technologie", "Info Text"],
+        correct: 1
     },
     {
-      question: "Was ist die Entwicklungsumgebung für IOS Apps?",
-      answers: ["Visual Studio", "XCode", "IntelliJ", "PyCharm"],
-      correct: 1,
+        question: "Wie viele Ozeane gibt es?",
+        answers: ["2", "10", "5", "7"],
+        correct: 2
     },
     {
-      question: "Für was ist CSS?",
-      answers: ["Für Website Logik", "Für Backend", "Zum Designen einer Website", "Zum Designen einer IOS App"],
-      correct: 2
+        question: "Wann hat der erste Weltkrieg begonnen?",
+        answers: ["1914", "1899", "1916", "1970"],
+        correct: 0
     },
     {
-      question: "Auf welchem Betriebssystem laufen die meisten Server?",
-      answers: ["Windows", "macOS", "Linux"],
-      correct: 2,
+        question: "Welches Land hat die meisten Nachbarländer?",
+        answers: ["Russland", "Deutschland", "Frankreich", "China"],
+        correct: 3
     },
     {
-      question: "Wie werden Passwörter in einer Datenbank gespeichert?",
-      answers: ["Ganz normal wie sie sind", "als Hash"],
-      correct: 1,
+        question: "Wer war der erste Präsident der Vereinigten Staaten?",
+        answers: ["George Washington", "Thomas Jefferson", "James Madison", "Andrew Jackson"],
+        correct: 0
     },
     {
-      question: "Welche Entwicklungsumgebung ist für Java?",
-      answers: ["IntelliJ", "PyCharm", "Webstorm", "XCode"],
-      correct: 0,
+        question: "Wann wurde der Euro eingeführt?",
+        answers: ["1980", "2002", "2000", "2010"],
+        correct: 1
     },
-  ];
+    {
+        question: "Was ist die Hauptstadt von Brasilien?",
+        answers: ["Brasilia", "Sao Paulo", "Porto Algere", "Rio de Janeiro"],
+        correct: 0
+    },
+    {
+        question: "Wie viele Spieler hat ein Fußball Team auf dem Feld?",
+        answers: ["14", "12", "11", "10"],
+        correct: 2
+    },
+    {
+        question: "Welche Farbe hat der Hut von Super Mario?",
+        answers: ["Gelb", "Rot", "Grün", "Blau"],
+        correct: 1
+    },
+    {
+        question: "Was ist die Hauptstadt von Australien?",
+        answers: ["Sydney", "Brasilia", "Melbourne", "Canberra"],
+        correct: 3
+    }
+];
 
-  let currentQuestions = [];
-  let currentQuestionIndex = 0;
-  let score = 0;
+const questions3 = [
+    {
+        question: "Was ist die Dateiendung für C++?",
+        answers: ["c", "c++", "cpp", "cpps"],
+        correct: 2
+    },
+    {
+        question: "Was davon ist keine Programmiersprache?",
+        answers: ["Java", "Python", "HTML", "C#"],
+        correct: 2
+    },
+    {
+        question: "Welcher HTML Tag ist für eine große Überschrift?",
+        answers: ["<p>", "<h1>", "<ul>", "<input>"],
+        correct: 1
+    },
+    {
+        question: "Was davon ist JavaScript?",
+        answers: ["print()", "console.log()"],
+        correct: 1
+    },
+    {
+        question: "Was davon ist ein Frontend Framework?",
+        answers: ["Angular", "node.js", "Webstorm", "mysql"],
+        correct: 0
+    },
+    {
+        question: "Bedeutet VPN Virtual Private Network?",
+        answers: ["Ja", "Nein"],
+        correct: 0
+    },
+    {
+        question: "Was ist die Entwicklungsumgebung für IOS Apps?",
+        answers: ["Visual Studio", "XCode", "IntelliJ", "PyCharm"],
+        correct: 1
+    },
+    {
+        question: "Für was ist CSS?",
+        answers: ["Für Website Logik", "Für Backend", "Zum Designen einer Website", "Zum Designen einer IOS App"],
+        correct: 2
+    },
+    {
+        question: "Auf welchem Betriebssystem laufen die meisten Server?",
+        answers: ["Windows", "macOS", "Linux"],
+        correct: 2
+    },
+    {
+        question: "Wie werden Passwörter in einer Datenbank gespeichert?",
+        answers: ["Ganz normal wie sie sind", "als Hash"],
+        correct: 1
+    },
+    {
+        question: "Welche Entwicklungsumgebung ist für Java?",
+        answers: ["IntelliJ", "PyCharm", "Webstorm", "XCode"],
+        correct: 0
+    }
+];
 
-  const questionScreen = document.getElementById("question-screen");
-  const resultScreen = document.getElementById("result-screen");
-  const questionText = document.getElementById("question-text");
-  const answersContainer = document.getElementById("answers-container");
-  const nextButton = document.getElementById("next-button");
-  const scoreText = document.getElementById("score-text");
 
-  function hideStart() {
-    document.getElementById('start').style.display = 'none';
-    document.getElementById('modis').style.display = 'flex';
-    document.getElementById('highscore-screen').style.display = 'none';
-    document.getElementById('logout').style.display = 'flex';
-  }
-
-  function startModi1() {
-    document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions;
-    startQuiz();
-  }
-
-  function startModi2() {
-    document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions2;
-    startQuiz();
-  }
-
-  function startModi3() {
-    document.getElementById('modis').style.display = 'none';
-    currentQuestions = questions3;
-    startQuiz();
-  }
-
-  function startQuiz() {
-    questionScreen.style.display = 'block';
-    resultScreen.style.display = 'none';
-    currentQuestionIndex = 0;
-    score = 0;
-    loadQuestion();
-  }
-
-  function loadQuestion() {
-    const currentQuestion = currentQuestions[currentQuestionIndex];
-    questionText.textContent = currentQuestion.question;
-
-    const answersContainer = document.getElementById("answers-container");
-    answersContainer.style.display = "flex";
-    answersContainer.style.flexDirection = "column";
-    answersContainer.style.alignItems = "center";
-    answersContainer.style.justifyContent = "center";
-    answersContainer.style.height = "80%";
-
-    answersContainer.innerHTML = "";
-
-    currentQuestion.answers.forEach((answer, index) => {
-      const button = document.createElement("button");
-      button.textContent = answer;
-      button.classList.add("answer-button");
-
-      button.style.display = "block";
-      button.style.width = "50%";
-      button.style.margin = "10px 0";
-      button.style.padding = "10px";
-
-      button.addEventListener("click", () => selectAnswer(index));
-      answersContainer.appendChild(button);
+document.addEventListener("DOMContentLoaded", function () {
+  fetch('/user-data')
+    .then(response => {
+      if (!response.ok) throw new Error('Not logged in');
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('username-display').textContent = data.username;
+      const localHighScores = JSON.parse(localStorage.getItem('highScores')) || {};
+      for (let quiz of ['quiz_1', 'quiz_2', 'quiz_3']) {
+        const highscore = data.highscores[quiz] || localHighScores[quiz] || 0;
+        document.getElementById(`${quiz}-score`).textContent = `${highscore}`;
+      }
+    })
+    .catch(error => {
+      showError('Bitte loggen Sie sich ein, um das Quiz zu starten.');
+      window.location.href = '/';
     });
+});
 
-    nextButton.style.display = 'none';
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let quizMode = '';
+
+const questionScreen = document.getElementById("question-screen");
+const resultScreen = document.getElementById("result-screen");
+const questionText = document.getElementById("question-text");
+const answersContainer = document.getElementById("answers-container");
+const scoreText = document.getElementById("score-text");
+
+function hideStart() {
+  document.getElementById('start').style.display = 'none';
+  document.getElementById('modis').style.display = 'flex';
+  document.getElementById('logout').style.display = 'flex';
+}
+
+function startModi(modus) {
+  document.getElementById('modis').style.display = 'none';
+  quizMode = modus;
+  currentQuestions = modus === 'quiz_1' ? questions1 : modus === 'quiz_2' ? questions2 : questions3;
+  startQuiz();
+}
+
+function startQuiz() {
+  questionScreen.style.display = 'block';
+  resultScreen.style.display = 'none';
+  currentQuestionIndex = 0;
+  score = 0;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const currentQuestion = currentQuestions[currentQuestionIndex];
+  questionText.textContent = currentQuestion.question;
+  answersContainer.innerHTML = "";
+
+  currentQuestion.answers.forEach((answer, index) => {
+    const button = document.createElement("button");
+    button.textContent = answer;
+    button.classList.add("answer-button");
+    button.addEventListener("click", () => selectAnswer(index));
+    answersContainer.appendChild(button);
+  });
+}
+
+function selectAnswer(selectedIndex) {
+  const currentQuestion = currentQuestions[currentQuestionIndex];
+  const answerButtons = document.querySelectorAll('.answer-button');
+
+  if (selectedIndex === currentQuestion.correct) {
+    score++;
   }
 
-  function selectAnswer(selectedIndex) {
-    const currentQuestion = currentQuestions[currentQuestionIndex];
-    if (selectedIndex === currentQuestion.correct) {
-      score++;
-    }
-    nextQuestion();
-  }
-
-  function nextQuestion() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < currentQuestions.length) {
-      loadQuestion();
-    } else {
-      showResults();
-    }
-  }
-
-  nextButton.addEventListener("click", () => {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < currentQuestions.length) {
-      loadQuestion();
-    } else {
-      showResults();
-    }
+  answerButtons.forEach((button, index) => {
+    if (index === currentQuestion.correct) button.classList.add('correct');
+    else if (index === selectedIndex) button.classList.add('incorrect');
+    button.disabled = true;
   });
 
-  function showResults() {
-    questionScreen.style.display = 'none';
-    resultScreen.style.display = 'block';
-    scoreText.textContent = `Du hast ${score} von ${currentQuestions.length} Fragen richtig beantwortet.`;
-  }
+  setTimeout(() => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentQuestions.length) loadQuestion();
+    else showResults();
+  }, 2000);
+}
 
-  document.getElementById("restart-button").addEventListener("click", () => {
-    questionScreen.style.display = 'none';
-    resultScreen.style.display = 'none';
-    document.getElementById('modis').style.display = 'block';
-  });
+function showResults() {
+  questionScreen.style.display = 'none';
+  resultScreen.style.display = 'block';
+  scoreText.textContent = `Du hast ${score} von ${currentQuestions.length} Fragen richtig beantwortet.`;
+  saveHighScore();
+}
 
-  function gotoAbout() {
-    window.location.href('/about')
+function saveHighScore() {
+  const highScores = JSON.parse(localStorage.getItem('highScores')) || {};
+  highScores[quizMode] = Math.max(highScores[quizMode] || 0, score);
+  localStorage.setItem('highScores', JSON.stringify(highScores));
+
+  fetch('/save-score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ quizMode, score }),
+  }).catch(() => showError('Fehler beim Speichern des Highscores.'));
+}
+
+function restartQuiz() {
+  resultScreen.style.display = 'none';
+  document.getElementById('modis').style.display = 'block';
+}
+  function toNextSide(url) {
+    window.location.href = url;
   }
-</script>
+    </script>
 </body>
-
 </html>
