@@ -108,23 +108,34 @@ app.post('/auth', function (request, response) {
 app.post('/register', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
+
     if (username && password) {
         db.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
-            if (error) throw error;
-            if (results.length > 0) {
-                response.send('Username already exists!');
-            } else {
-                bcrypt.hash(password, 10, function (err, hash) {
-                    if (err) throw err;
-                    db.query('INSERT INTO users (username, password, email, quiz_1, quiz_2, quiz_3) VALUES (?, ?, ?, 0, 0, 0)', [username, hash, ''], function (error, results, fields) {
-                        if (error) throw error;
-                        response.redirect('/');
-                    });
-                });
+            if (error) {
+                console.error(error);
+                return response.status(500).json({ success: false, message: 'Interner Serverfehler. Bitte versuchen Sie es später erneut.' });
             }
+            if (results.length > 0) {
+                return response.status(400).json({ success: false, message: 'Der Benutzername existiert bereits!' });
+            }
+
+            bcrypt.hash(password, 10, function (err, hash) {
+                if (err) {
+                    console.error(err);
+                    return response.status(500).json({ success: false, message: 'Fehler beim Verschlüsseln des Passworts.' });
+                }
+
+                db.query('INSERT INTO users (username, password, email, quiz_1, quiz_2, quiz_3) VALUES (?, ?, ?, 0, 0, 0)', [username, hash, ''], function (error, results, fields) {
+                    if (error) {
+                        console.error(error);
+                        return response.status(500).json({ success: false, message: 'Fehler beim Speichern des Benutzers in der Datenbank.' });
+                    }
+                    response.status(200).json({ success: true, message: 'Registrierung erfolgreich!' });
+                });
+            });
         });
     } else {
-        response.send('Please enter Username and Password!');
+        response.status(400).json({ success: false, message: 'Bitte geben Sie Benutzername und Passwort ein!' });
     }
 });
 
@@ -135,6 +146,8 @@ app.get('/quiz', function (request, response) {
         response.redirect('/');
     }
 });
+
+
 
 
 app.get('/about', function(request, response) {
