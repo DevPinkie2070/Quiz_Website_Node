@@ -32,12 +32,27 @@
       z-index: 1000;
     }
 
+    #question-image {
+      display: block;
+      margin: 20px auto;
+      max-height: 200px;
+      max-width: 100%;
+    }
+
     .logout {
       display: none;
     }
 
     #logout {
       display: none;
+    }
+
+    .answer-button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -83,6 +98,7 @@
   </div>
 
   <div class="question-screen" id="question-screen" style="display: none;">
+    <img id="question-image" alt="" style="display: none;">
     <h2 id="question-text">Frage wird geladen...</h2>
     <div id="answers-container"></div>
     <button id="next-button" class="next-button" style="display: none;">Nächste Frage</button>
@@ -95,44 +111,85 @@
   </div>
 
   <script>
-function showError(message) {
-  const errorBox = document.createElement('div');
-  errorBox.className = 'error-box';
-  errorBox.textContent = message;
-  document.body.appendChild(errorBox);
-  setTimeout(() => errorBox.remove(), 3000);
-}
-
-function logout() {
-  toNextSide('/');
-}
-
 const questions1 = [
-    {
-        question: "Was ist das Logo von Apple?",
-        answers: ["Apfel", "Birne", "Banane", "Traube"],
-        correct: 0
-    },
-    {
-        question: "Was ist die Hauptstadt von Deutschland?",
-        answers: ["Berlin", "München", "Hamburg", "Köln"],
-        correct: 0
-    },
-    {
-        question: "Wie viele Kontinente gibt es?",
-        answers: ["5", "6", "7", "8"],
-        correct: 2
-    },
-    {
-        question: "Welche Automarke hat ein Pferd als Logo?",
-        answers: ["Ferrari", "Ford", "Volkswagen", "Nissan"],
-        correct: 0
-    },
-    {
-        question: "Wie viele Bundesländer hat Deutschland?",
-        answers: ["4", "19", "20", "16"],
-        correct: 3
-    }
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+    answers: ["Samsung", "Apple", "Microsoft", "Google"],
+    correct: 1
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg",
+    answers: ["Adobe", "SVG", "CSS", "HTML"],
+    correct: 2
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/87/Google_Chrome_icon_%282011%29.svg",
+    answers: ["Firefox", "Google Chrome", "Edge", "Safari"],
+    correct: 1
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Mozilla_Firefox_logo_2017.svg",
+    answers: ["Edge", "Opera", "Arc", "Firefox"],
+    correct: 3
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
+    answers: ["Git", "HTML", "Google", "Github"],
+    correct: 3
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg",
+    answers: ["CSS", "PHP", "HTML", "JAVA"],
+    correct: 2
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg",
+    answers: ["BMW", "Audi", "Mercedes", "Volkswagen"],
+    correct: 0
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Audi_logo.svg",
+    answers: ["BMW", "Audi", "Mercedes", "Volkswagen"],
+    correct: 1
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/37/Volkswagen_logo_2019.svg",
+    answers: ["Volkswagen", "BMW", "Audi", "Mercedes"],
+    correct: 0
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Ferrari-Logo.svg",
+    answers: ["Ferrari", "Lamborghini", "Porsche", "Maserati"],
+    correct: 0
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg",
+    answers: ["BMW", "Audi", "Volkswagen", "Mercedes"],
+    correct: 3
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Porsche_Logo.svg",
+    answers: ["Maserati", "Ferrari", "Lamborghini", "Porsche"],
+    correct: 3
+  },
+  {
+    question: "Welches Logo ist das?",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_logo.svg",
+    answers: ["Toyota", "Honda", "Nissan", "Mazda"],
+    correct: 0
+  }
 ];
 
 const questions2 = [
@@ -271,7 +328,6 @@ const questions3 = [
     }
 ];
 
-
 document.addEventListener("DOMContentLoaded", function () {
   fetch('/user-data')
     .then(response => {
@@ -297,12 +353,6 @@ let currentQuestionIndex = 0;
 let score = 0;
 let quizMode = '';
 
-const questionScreen = document.getElementById("question-screen");
-const resultScreen = document.getElementById("result-screen");
-const questionText = document.getElementById("question-text");
-const answersContainer = document.getElementById("answers-container");
-const scoreText = document.getElementById("score-text");
-
 function hideStart() {
   document.getElementById('start').style.display = 'none';
   document.getElementById('modis').style.display = 'flex';
@@ -317,8 +367,8 @@ function startModi(modus) {
 }
 
 function startQuiz() {
-  questionScreen.style.display = 'block';
-  resultScreen.style.display = 'none';
+  document.getElementById("question-screen").style.display = 'block';
+  document.getElementById("result-screen").style.display = 'none';
   currentQuestionIndex = 0;
   score = 0;
   loadQuestion();
@@ -326,7 +376,18 @@ function startQuiz() {
 
 function loadQuestion() {
   const currentQuestion = currentQuestions[currentQuestionIndex];
-  questionText.textContent = currentQuestion.question;
+  document.getElementById("question-text").textContent = currentQuestion.question;
+
+  // Bild anzeigen, wenn vorhanden
+  const questionImage = document.getElementById("question-image");
+  if (currentQuestion.image) {
+    questionImage.src = currentQuestion.image;
+    questionImage.style.display = 'block';
+  } else {
+    questionImage.style.display = 'none';
+  }
+
+  const answersContainer = document.getElementById("answers-container");
   answersContainer.innerHTML = "";
 
   currentQuestion.answers.forEach((answer, index) => {
@@ -360,9 +421,9 @@ function selectAnswer(selectedIndex) {
 }
 
 function showResults() {
-  questionScreen.style.display = 'none';
-  resultScreen.style.display = 'block';
-  scoreText.textContent = `Du hast ${score} von ${currentQuestions.length} Fragen richtig beantwortet.`;
+  document.getElementById("question-screen").style.display = 'none';
+  document.getElementById("result-screen").style.display = 'block';
+  document.getElementById("score-text").textContent = `Du hast ${score} von ${currentQuestions.length} Fragen richtig beantwortet.`;
   saveHighScore();
 }
 
@@ -379,12 +440,25 @@ function saveHighScore() {
 }
 
 function restartQuiz() {
-  resultScreen.style.display = 'none';
+  document.getElementById("result-screen").style.display = 'none';
   document.getElementById('modis').style.display = 'block';
 }
-  function toNextSide(url) {
-    window.location.href = url;
-  }
-    </script>
+
+function showError(message) {
+  const errorBox = document.createElement('div');
+  errorBox.className = 'error-box';
+  errorBox.textContent = message;
+  document.body.appendChild(errorBox);
+  setTimeout(() => errorBox.remove(), 3000);
+}
+
+function logout() {
+  toNextSide('/');
+}
+
+function toNextSide(url) {
+  window.location.href = url;
+}
+  </script>
 </body>
 </html>
