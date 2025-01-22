@@ -60,7 +60,95 @@
   <!-- <button class="logout" id="logout" onclick="logout()" style="display: none;">
     <i class="fa-solid fa-right-from-bracket"></i> Logout
   </button> -->
+<!DOCTYPE html>
+<html>
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <title>Quiz BvA</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/img/logo.png">
+</head>
+
+<style>
+    .error-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: red;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+</style>
+
+<body>
+    <div class="login-register">
+        <h1 id="form-title">Login</h1>
+
+        <form id="login-form" action="/auth" method="post" style="display: block;">
+            <label for="username">
+                <i class="fas fa-user"></i>
+            </label>
+            <input type="text" name="username" placeholder="Username" id="username" required> <br>
+            <label for="password">
+                <i class="fas fa-lock"></i>
+            </label>
+            <input type="password" name="password" placeholder="Password" id="password" required> <br>
+            <input type="submit" value="Login" class="btn">
+        </form>
+
+        <form id="register-form" action="/register" method="post" style="display: none;">
+            <label for="reg_username">
+                <i class="fas fa-user"></i>
+            </label>
+            <input type="text" name="username" placeholder="Username" id="reg_username" required> <br>
+            <label for="reg_password">
+                <i class="fas fa-lock"></i>
+            </label>
+            <input type="password" name="password" placeholder="Password" id="reg_password" required> <br>
+            <input type="submit" value="Register">
+        </form>
+
+        <button id="toggle-button" onclick="toggleForm()">Zum Registrieren wechseln</button>
+    </div>
+
+    <script>
+        function showError(message) {
+            const errorBox = document.createElement('div');
+            errorBox.className = 'error-box';
+            errorBox.textContent = message;
+            document.body.appendChild(errorBox);
+            setTimeout(() => errorBox.remove(), 3000);
+        }
+
+        function toggleForm() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const formTitle = document.getElementById('form-title');
+            const toggleButton = document.getElementById('toggle-button');
+
+            if (loginForm.style.display === 'block') {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                formTitle.textContent = 'Register';
+                toggleButton.textContent = 'Zum Login wechseln';
+            } else {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                formTitle.textContent = 'Login';
+                toggleButton.textContent = 'Zum Registrieren wechseln';
+            }
+        }
+    </script>
+</body>
+
+</html>
   <div class="start" id="start">
     <header>
       <h1>Quiz</h1>
