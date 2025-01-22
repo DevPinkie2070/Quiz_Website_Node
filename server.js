@@ -20,7 +20,7 @@ function createDatabaseConnection() {
             if (err) {
                 console.error('Fehler beim Verbinden zur Datenbank:', err.message);
                 console.log('Erneuter Verbindungsversuch in 5 Sekunden...');
-                setTimeout(connect, 5000);
+                setTimeout(connect, 5000); 
             } else {
                 console.log('Erfolgreich mit der Datenbank verbunden!');
             }
@@ -51,6 +51,13 @@ function createDatabaseConnection() {
 
 const db = createDatabaseConnection();
 
+db.query('SELECT 1 + 1 AS result', (err, results) => {
+    if (err) {
+        return console.error('Fehler bei der Abfrage:', err.message);
+    }
+    console.log('Abfrageergebnis:', results);
+});
+
 const app = express();
 
 app.use(session({
@@ -66,7 +73,6 @@ app.get('/', function (request, response) {
     response.sendFile(path.join(__dirname + '/index.html'));
 });
 
-// Login-Route
 app.post('/auth', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
@@ -75,23 +81,31 @@ app.post('/auth', function (request, response) {
         db.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
             if (error) throw error;
 
+            // Wenn Benutzer gefunden wird
             if (results.length > 0) {
                 bcrypt.compare(password, results[0].password, function (err, result) {
                     if (result) {
+                        // Überprüfen der Rolle
                         let role = results[0].role;
                         if (role === 0 || role === 1) {
+                            // Speichern von Informationen in der Session
                             request.session.loggedin = true;
                             request.session.username = username;
-                            request.session.role = role;
+                            request.session.role = role;  // Rolle speichern
+
+                            // Highscore-Daten aus der DB laden
                             request.session.highscores = {
                                 quiz_1: results[0].quiz_1,
                                 quiz_2: results[0].quiz_2,
                                 quiz_3: results[0].quiz_3
                             };
 
+                            // Weiterleitung je nach Rolle (Admin- oder Benutzerbereich)
                             if (role === 1) {
-                                response.redirect('/admin');
+                                // Administrator wird weitergeleitet
+                                response.redirect('/admin');  // Beispielroute für Admin
                             } else {
+                                // Normaler Benutzer wird zum Quiz weitergeleitet
                                 response.redirect('/quiz');
                             }
                         } else {
@@ -110,77 +124,25 @@ app.post('/auth', function (request, response) {
     }
 });
 
-// Admin-Routen Middleware
 app.use('/admin', (request, response, next) => {
     if (request.session.loggedin && request.session.role === 1) {
-        next();
+        next(); // Wenn der Benutzer ein Admin ist, weiter zu den eigentlichen Admin-Routen
     } else {
         response.status(403).send('Zugriff verweigert: Administrator erforderlich');
-        response.redirect('/');
     }
 });
 
-// Admin Dashboard
+// Admin-Dashboard Route
 app.get('/admin', function (request, response) {
-    response.sendFile(path.join(__dirname, 'admin-dashboard.html'));
+    response.sendFile(path.join(__dirname, 'admin-dashboard.html'));  // Beispiel für Admin-Dashboard
 });
 
-// Admin-Benutzerverwaltung
+// Beispiel: Admin-Routen zum Verwalten von Benutzern
 app.get('/admin/users', function (request, response) {
-    const query = 'SELECT id, username, email, role FROM users';
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Fehler bei der Benutzerabfrage:', err);
-            return response.status(500).send('Interner Serverfehler');
-        }
-        response.json(results);
-    });
+    // Hier könntest du die Benutzer aus der DB abfragen und anzeigen
+    response.send('Admin Benutzerverwaltung');
 });
 
-// Admin: Benutzerrolle ändern
-app.put('/admin/users/:id/role', function (request, response) {
-    const userId = request.params.id;
-    const { role } = request.body;
-
-    if (![0, 1].includes(role)) {
-        return response.status(400).send('Ungültige Rolle');
-    }
-
-    const query = 'UPDATE users SET role = ? WHERE id = ?';
-    db.query(query, [role, userId], (err, results) => {
-        if (err) {
-            console.error('Fehler beim Aktualisieren der Benutzerrolle:', err);
-            return response.status(500).send('Fehler beim Ändern der Benutzerrolle');
-        }
-
-        if (results.affectedRows > 0) {
-            response.send('Benutzerrolle erfolgreich aktualisiert');
-        } else {
-            response.status(404).send('Benutzer nicht gefunden');
-        }
-    });
-});
-
-// Admin: Benutzer löschen
-app.delete('/admin/users/:id', function (request, response) {
-    const userId = request.params.id;
-
-    const query = 'DELETE FROM users WHERE id = ?';
-    db.query(query, [userId], (err, results) => {
-        if (err) {
-            console.error('Fehler beim Löschen des Benutzers:', err);
-            return response.status(500).send('Fehler beim Löschen des Benutzers');
-        }
-
-        if (results.affectedRows > 0) {
-            response.send('Benutzer erfolgreich gelöscht');
-        } else {
-            response.status(404).send('Benutzer nicht gefunden');
-        }
-    });
-});
-
-// Registrierungs-Route
 app.post('/register', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
@@ -215,9 +177,9 @@ app.post('/register', function (request, response) {
     }
 });
 
-// Logout-Route
 app.get('/logout', function (request, response) {
     request.session.destroy(err => {
+        console.log('Logout')
         if (err) {
             return response.status(500).send('Fehler beim Abmelden');
         }
@@ -225,7 +187,6 @@ app.get('/logout', function (request, response) {
     });
 });
 
-// Quiz-Route
 app.get('/quiz', function (request, response) {
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/quiz.html'));
@@ -234,7 +195,17 @@ app.get('/quiz', function (request, response) {
     }
 });
 
-// Weitere Routen für Highscores, User-Daten, etc.
+
+
+
+app.get('/about', function(request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/about.html'));
+    } else {
+        response.redirect('/');
+    }
+})
+
 app.get('/user-data', function (request, response) {
     if (request.session.loggedin) {
         response.json({
@@ -246,16 +217,25 @@ app.get('/user-data', function (request, response) {
     }
 });
 
-// Highscore aktualisieren
+app.get('/quiz/leaderboard', function(request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/leaderboard.html'));
+    } else {
+        response.redirect('/');
+    }
+});
+
 app.post('/update-highscore', function (request, response) {
     if (request.session.loggedin) {
         const username = request.session.username;
         const { quizId, score } = request.body;
 
+        // Prüfen, ob die erforderlichen Daten gesendet wurden
         if (!quizId || typeof score !== 'number') {
             return response.status(400).send('Ungültige Anfrage');
         }
 
+        // Highscore aktualisieren
         const column = `quiz_${quizId}`;
         const query = `UPDATE users SET ${column} = GREATEST(${column}, ?) WHERE username = ?`;
         db.query(query, [score, username], function (error, results) {
@@ -270,7 +250,74 @@ app.post('/update-highscore', function (request, response) {
     }
 });
 
-// Server starten
+app.post('/save-score', function(request, response) {
+    if (!request.session.loggedin) {
+      return response.status(401).send('Nicht eingeloggt');
+    }
+  
+    const username = request.session.username;  // Benutzername des eingeloggten Benutzers
+    const quizMode = request.body.quizMode;  // Quizmodus (z. B. quiz_1, quiz_2, quiz_3)
+    const score = request.body.score;  // Der erreichte Highscore
+  
+    // Überprüfen, ob der neue Score höher ist als der gespeicherte Highscore
+    const query = `SELECT * FROM users WHERE username = ?`;
+    db.query(query, [username], (err, results) => {
+      if (err) throw err;
+  
+      if (results.length > 0) {
+        let user = results[0];
+        let updateQuery = '';
+  
+        // Entscheide, welches Quiz die höchste Punktzahl erhalten soll
+        if (quizMode === 'quiz_1' && score > user.quiz_1) {
+          updateQuery = 'UPDATE users SET quiz_1 = ? WHERE username = ?';
+        } else if (quizMode === 'quiz_2' && score > user.quiz_2) {
+          updateQuery = 'UPDATE users SET quiz_2 = ? WHERE username = ?';
+        } else if (quizMode === 'quiz_3' && score > user.quiz_3) {
+          updateQuery = 'UPDATE users SET quiz_3 = ? WHERE username = ?';
+        }
+  
+        // Wenn die Abfrage zum Aktualisieren des Scores existiert, dann ausführen
+        if (updateQuery) {
+          db.query(updateQuery, [score, username], (err) => {
+            if (err) throw err;
+            response.send({ success: true, message: 'Highscore gespeichert!' });
+          });
+        } else {
+          response.send({ success: true, message: 'Highscore ist bereits aktuell.' });
+        }
+      } else {
+        response.status(404).send('Benutzer nicht gefunden');
+      }
+    });
+  });
+
+  app.get('/leaderboarddata', (req, res) => {
+    const quiz = req.query.quiz; // quiz_1, quiz_2, quiz_3
+
+    // Eingabe validieren
+    if (!['quiz_1', 'quiz_2', 'quiz_3'].includes(quiz)) {
+        return res.status(400).send('Ungültiges Quiz.');
+    }
+
+    // Abfrage basierend auf dem gewünschten Quiz, Benutzer mit role = 1 ausschließen
+    const query = `
+        SELECT username, ${quiz} AS score
+        FROM users
+        WHERE role != 1
+        ORDER BY ${quiz} DESC
+        LIMIT 10
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Fehler bei der Abfrage:', err.message);
+            return res.status(500).send('Interner Serverfehler');
+        }
+        res.json(results);
+    });
+});
+
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
 });
