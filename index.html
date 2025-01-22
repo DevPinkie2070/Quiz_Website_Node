@@ -9,6 +9,21 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 
+<style>
+    .error-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: red;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+</style>
+
 <body>
     <div class="login-register">
         <h1 id="form-title">Login</h1>
@@ -42,6 +57,17 @@
 
 
     <script>
+
+        
+        function showError(message) {
+            const errorBox = document.createElement('div');
+            errorBox.className = 'error-box';
+            errorBox.textContent = message;
+            document.body.appendChild(errorBox);
+            setTimeout(() => errorBox.remove(), 3000);
+        }
+
+
         function toggleForm() {
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');

@@ -344,7 +344,9 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(error => {
       showError('Bitte loggen Sie sich ein, um das Quiz zu starten.');
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+    }, 3000);
     });
 });
 
