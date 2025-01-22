@@ -57,9 +57,9 @@
   </style>
 </head>
 <body>
-  <button class="logout" id="logout" onclick="logout()" style="display: none;">
+  <!-- <button class="logout" id="logout" onclick="logout()" style="display: none;">
     <i class="fa-solid fa-right-from-bracket"></i> Logout
-  </button>
+  </button> -->
 
   <div class="start" id="start">
     <header>
@@ -455,7 +455,7 @@ function showError(message) {
 }
 
 function logout() {
-  toNextSide('/');
+  toNextSide('/logout');
 }
 
 function toNextSide(url) {

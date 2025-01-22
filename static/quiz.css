@@ -217,11 +217,6 @@ footer {
     border-top: #fff 1px solid;
 }
 
-.answer-button:hover {
-    background-color: black;
-    color: rgb(128, 209, 239);
-}
-
 .answer-button:active {
     background-color: #000000;
 }

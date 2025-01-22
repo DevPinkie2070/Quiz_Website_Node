@@ -139,6 +139,16 @@ app.post('/register', function (request, response) {
     }
 });
 
+app.get('/logout', function (request, response) {
+    request.session.destroy(err => {
+        console.log('Logout')
+        if (err) {
+            return response.status(500).send('Fehler beim Abmelden');
+        }
+        response.redirect('/');
+    });
+});
+
 app.get('/quiz', function (request, response) {
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/quiz.html'));
