@@ -20,7 +20,8 @@
                 <th>Quiz 3</th>
                 <th>Rolle</th>
                 <th>Aktionen</th>
-                <th><button class="refresh-button" onclick="loadUsers()"><i class="fa-solid fa-arrows-rotate"></i></button></th>
+                <th><button class="refresh-button" onclick="loadUsers()"><i class="fa-solid fa-arrows-rotate"></i></button>
+                <button class="refresh-button" onclick="gotoQuiz()"><i class="fa-solid fa-question"></i></button></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -49,6 +50,7 @@
                     <td>
                         <button onclick="deleteUser(${user.id})"><i class="fas fa-trash-alt"></i></button>
                         <button onclick="changeRole(${user.id})"><i class="fa-solid fa-user-tie"></i></button>
+                        <button onclick="changePassword(${user.id})"><i class="fas fa-key"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -76,7 +78,34 @@
             }
         }
 
+        async function changePassword(userId) {
+            const newPassword = prompt('Gib das neue Passwort für diesen Benutzer ein:');
+            if (newPassword) {
+                try {
+                    const response = await fetch(`/admin/users/${userId}/change-password`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ newPassword }),
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Passwort erfolgreich geändert!');
+                    } else {
+                        alert('Fehler beim Ändern des Passworts: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Ein Fehler ist aufgetreten: ' + error.message);
+                }
+            } else {
+                alert('Passwortänderung abgebrochen.');
+            }
+        }
+
         loadUsers();
+
+        function gotoQuiz() {
+            window.location.href = '/quiz';
+        };
     </script>
 </body>
 </html>

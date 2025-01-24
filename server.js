@@ -5,8 +5,12 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 
+
+
+
 function createDatabaseConnection() {
     let connection;
+
 
     const connect = () => {
         connection = mysql.createConnection({
@@ -50,6 +54,28 @@ function createDatabaseConnection() {
 }
 
 const db = createDatabaseConnection();
+function createDatabaseConnectionPool() {
+    const pool = mysql.createPool({
+        connectionLimit: 10,  // Maximale Anzahl an gleichzeitigen Verbindungen
+        host: 'w01d3373.kasserver.com',
+        user: 'd0424373',
+        password: 'XMrodFRJY2T7ZqCzhDo4',
+        database: 'd0424373'
+    });
+
+    // Fehlerbehandlung für den Pool
+    pool.on('error', (err) => {
+        console.error('Datenbankpool-Fehler:', err.message);
+        if (err.fatal) {
+            console.error('Schwerwiegender Fehler. Anwendung wird beendet.');
+            process.exit(1);
+        }
+    });
+
+    return pool;
+}
+
+const dbPool = createDatabaseConnectionPool();
 
 db.query('SELECT 1 + 1 AS result', (err, results) => {
     if (err) {
@@ -68,6 +94,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'static')));
+
 
 app.get('/', function (request, response) {
     response.sendFile(path.join(__dirname + '/index.html'));
@@ -103,7 +130,7 @@ app.post('/auth', function (request, response) {
                             // Weiterleitung je nach Rolle (Admin- oder Benutzerbereich)
                             if (role === 1) {
                                 // Administrator wird weitergeleitet
-                                response.redirect('/admin');  // Beispielroute für Admin
+                                response.redirect('/quiz/admin');  // Beispielroute für Admin
                             } else {
                                 // Normaler Benutzer wird zum Quiz weitergeleitet
                                 response.redirect('/quiz');
@@ -124,7 +151,7 @@ app.post('/auth', function (request, response) {
     }
 });
 
-app.use('/admin', (request, response, next) => {
+app.use('/quiz/admin', (request, response, next) => {
     if (request.session.loggedin && request.session.role === 1) {
         next(); // Wenn der Benutzer ein Admin ist, weiter zu den eigentlichen Admin-Routen
     } else {
@@ -133,14 +160,80 @@ app.use('/admin', (request, response, next) => {
 });
 
 // Admin-Dashboard Route
-app.get('/admin', function (request, response) {
+app.get('/quiz/admin', function (request, response) {
     response.sendFile(path.join(__dirname, 'admin-dashboard.html'));  // Beispiel für Admin-Dashboard
 });
 
 // Beispiel: Admin-Routen zum Verwalten von Benutzern
 app.get('/admin/users', function (request, response) {
-    // Hier könntest du die Benutzer aus der DB abfragen und anzeigen
-    response.send('Admin Benutzerverwaltung');
+    const query = 'SELECT id, username, email, quiz_1, quiz_2, quiz_3, role FROM users';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Fehler bei der Benutzerabfrage:', err);
+            return response.status(500).send('Interner Serverfehler');
+        }
+
+        // Die Rolle von Zahlen in Strings umwandeln
+        const users = results.map(user => {
+            // Umwandeln der Rolle von 0 auf 'user' und von 1 auf 'admin'
+            if (user.role === 0) {
+                user.role = 'Benutzer';
+            } else if (user.role === 1) {
+                user.role = 'Administrator';
+            }
+            return user;
+        });
+
+        response.json(users);
+    });
+});
+
+// Admin: Benutzerrolle ändern
+app.put('/admin/users/:id/role', function (request, response) {
+    const userId = request.params.id;
+    let { role } = request.body;
+
+    // Wenn die Rolle "admin" ist, setze sie auf 1, andernfalls auf 0
+    if (role === 'admin') {
+        role = 1;
+    } else if (role === 'user') {
+        role = 0;
+    } else {
+        return response.status(400).send('Ungültige Rolle');
+    }
+
+    const query = 'UPDATE users SET role = ? WHERE id = ?';
+    db.query(query, [role, userId], (err, results) => {
+        if (err) {
+            console.error('Fehler beim Aktualisieren der Benutzerrolle:', err);
+            return response.status(500).send('Fehler beim Ändern der Benutzerrolle');
+        }
+
+        if (results.affectedRows > 0) {
+            response.send('Benutzerrolle erfolgreich aktualisiert');
+        } else {
+            response.status(404).send('Benutzer nicht gefunden');
+        }
+    });
+});
+
+// Admin: Benutzer löschen
+app.delete('/admin/users/:id', function (request, response) {
+    const userId = request.params.id;
+
+    const query = 'DELETE FROM users WHERE id = ?';
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Fehler beim Löschen des Benutzers:', err);
+            return response.status(500).send('Fehler beim Löschen des Benutzers');
+        }
+
+        if (results.affectedRows > 0) {
+            response.send('Benutzer erfolgreich gelöscht');
+        } else {
+            response.status(404).send('Benutzer nicht gefunden');
+        }
+    });
 });
 
 app.post('/register', function (request, response) {
@@ -195,8 +288,42 @@ app.get('/quiz', function (request, response) {
     }
 });
 
+// Passwort für einen Benutzer ändern
+app.post('/admin/users/:id/change-password', function (request, response) {
+    if (!request.session.loggedin || request.session.role !== 1) {
+        return response.status(403).send('Zugriff verweigert: Administrator erforderlich');
+    }
 
+    const userId = request.params.id;
+    const { newPassword } = request.body;
 
+    if (!newPassword || newPassword.length < 6) {
+        return response.status(400).json({ success: false, message: 'Das Passwort muss mindestens 6 Zeichen lang sein.' });
+    }
+
+    // Das neue Passwort hashen
+    bcrypt.hash(newPassword, 10, function (err, hashedPassword) {
+        if (err) {
+            console.error('Fehler beim Hashen des Passworts:', err);
+            return response.status(500).json({ success: false, message: 'Fehler beim Hashen des Passworts.' });
+        }
+
+        // Passwort in der Datenbank aktualisieren
+        const query = 'UPDATE users SET password = ? WHERE id = ?';
+        db.query(query, [hashedPassword, userId], (err, results) => {
+            if (err) {
+                console.error('Fehler beim Aktualisieren des Passworts:', err);
+                return response.status(500).json({ success: false, message: 'Fehler beim Aktualisieren des Passworts.' });
+            }
+
+            if (results.affectedRows > 0) {
+                response.json({ success: true, message: 'Passwort erfolgreich geändert.' });
+            } else {
+                response.status(404).json({ success: false, message: 'Benutzer nicht gefunden.' });
+            }
+        });
+    });
+});
 
 app.get('/about', function(request, response) {
     if (request.session.loggedin) {
