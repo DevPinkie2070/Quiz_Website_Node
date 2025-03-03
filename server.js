@@ -5,9 +5,6 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 
-
-
-
 function createDatabaseConnection() {
     let connection;
 
@@ -97,7 +94,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 
 app.get('/', function (request, response) {
-    response.sendFile(path.join(__dirname + '/index.html'));
+    response.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 app.post('/auth', function (request, response) {
@@ -161,7 +158,7 @@ app.use('/quiz/admin', (request, response, next) => {
 
 // Admin-Dashboard Route
 app.get('/quiz/admin', function (request, response) {
-    response.sendFile(path.join(__dirname, 'admin-dashboard.html'));  // Beispiel für Admin-Dashboard
+    response.sendFile(path.join(__dirname, '/public/admin-dashboard.html'));  // Beispiel für Admin-Dashboard
 });
 
 // Beispiel: Admin-Routen zum Verwalten von Benutzern
@@ -282,11 +279,19 @@ app.get('/logout', function (request, response) {
 
 app.get('/quiz', function (request, response) {
     if (request.session.loggedin) {
-        response.sendFile(path.join(__dirname + '/quiz.html'));
+        response.sendFile(path.join(__dirname + '/public/quiz.html'));
     } else {
         response.redirect('/');
     }
 });
+
+app.get('/quiz/bug', function (request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/public/bug-report.html'));
+    } else
+        response.redirect('/');
+}
+)
 
 // Passwort für einen Benutzer ändern
 app.post('/admin/users/:id/change-password', function (request, response) {
@@ -327,7 +332,7 @@ app.post('/admin/users/:id/change-password', function (request, response) {
 
 app.get('/about', function(request, response) {
     if (request.session.loggedin) {
-        response.sendFile(path.join(__dirname + '/about.html'));
+        response.sendFile(path.join(__dirname + '/public/wartung.html'));
     } else {
         response.redirect('/');
     }
@@ -346,7 +351,7 @@ app.get('/user-data', function (request, response) {
 
 app.get('/quiz/leaderboard', function(request, response) {
     if (request.session.loggedin) {
-        response.sendFile(path.join(__dirname + '/leaderboard.html'));
+        response.sendFile(path.join(__dirname + '/public/leaderboard.html'));
     } else {
         response.redirect('/');
     }
@@ -419,7 +424,7 @@ app.post('/save-score', function(request, response) {
     });
   });
 
-  app.get('/leaderboarddata', (req, res) => {
+app.get('/leaderboarddata', (req, res) => {
     const quiz = req.query.quiz; // quiz_1, quiz_2, quiz_3
 
     // Eingabe validieren
