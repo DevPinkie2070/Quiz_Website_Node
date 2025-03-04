@@ -287,7 +287,8 @@ app.get('/quiz', function (request, response) {
 
 app.get('/quiz/bug', function (request, response) {
     if (request.session.loggedin) {
-        response.sendFile(path.join(__dirname + '/public/bug-report.html'));
+        // response.sendFile(path.join(__dirname + '/public/bug-report.html'));
+        response.sendFile(path.join(__dirname + '/public/wartung.html'));
     } else
         response.redirect('/');
 }

@@ -1,64 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"></html>
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Quiz BvA</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-    <link rel="stylesheet" href="/style.css">
-</head>
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
 
-<style>
-    .error-box {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: red;
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 5px;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-    }
-</style>
+        .login-register {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #495057;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .error-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: red;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+    </style>
+</head>
 
 <body>
     <div class="login-register">
-        <h1 id="form-title">Login</h1>
+        <h1 id="form-title" class="text-center">Login</h1>
 
         <form id="login-form" action="/auth" method="post" style="display: block;">
-            <label for="username">
-                <i class="fas fa-user"></i>
-            </label>
-            <input type="text" name="username" placeholder="Username" id="username" required> <br>
-            <label for="password">
-                <i class="fas fa-lock"></i>
-            </label>
-            <input type="password" name="password" placeholder="Password" id="password" required> <br>
-            <input type="submit" value="Login" class="btn">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                </label>
+                <input type="text" class="form-control" name="username" placeholder="Username" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <input type="password" class="form-control" name="password" placeholder="Password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
 
         <form id="register-form" action="/register" method="post" style="display: none;">
-            <label for="reg_username">
-                <i class="fas fa-user"></i>
-            </label>
-            <input type="text" name="username" placeholder="Username" id="reg_username" required> <br>
-            <label for="reg_password">
-                <i class="fas fa-lock"></i>
-            </label>
-            <input type="password" name="password" placeholder="Password" id="reg_password" required> <br>
-            <input type="submit" value="Register">
+            <div class="form-group">
+                <label for="reg_username">
+                    <i class="fas fa-user"></i>
+                </label>
+                <input type="text" class="form-control" name="username" placeholder="Username" id="reg_username" required>
+            </div>
+            <div class="form-group">
+                <label for="reg_password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <input type="password" class="form-control" name="password" placeholder="Password" id="reg_password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
         </form>
 
-        <button id="toggle-button" onclick="toggleForm()">Zum Registrieren wechseln</button>
+        <button id="toggle-button" class="btn btn-secondary btn-block mt-3" onclick="toggleForm()">Zum Registrieren wechseln</button>
     </div>
 
-
     <script>
-
-        
         function showError(message) {
             const errorBox = document.createElement('div');
             errorBox.className = 'error-box';
@@ -67,13 +85,11 @@
             setTimeout(() => errorBox.remove(), 3000);
         }
 
-
         function toggleForm() {
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');
             const formTitle = document.getElementById('form-title');
             const toggleButton = document.getElementById('toggle-button');
-
 
             if (loginForm.style.display === 'block') {
                 loginForm.style.display = 'none';
@@ -88,6 +104,9 @@
             }
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

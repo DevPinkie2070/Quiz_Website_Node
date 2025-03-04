@@ -16,7 +16,7 @@ body {
 header {
     text-align: center;
     padding: 20px;
-    font-size: 30px;
+    font-size: 2rem;
     margin: 0;
 }
 
@@ -27,18 +27,19 @@ header {
     justify-content: center;
     background-color: rgba(118, 198, 184, 0.7);
     width: 90%;
-    border-radius: 20px;
+    border-radius: 0.5rem;
     box-shadow: 0 0 10px #3a3939;
+    padding: 1rem;
 }
 
 .startbutton {
     background-color: rgba(128, 209, 239, 0.7);
     font-family: "Lato", sans-serif;
-    border: 1px black solid;
-    border-radius: 5px;
+    border: 1px solid black;
+    border-radius: 0.25rem;
     height: 10vh;
     width: 20vw;
-    font-size: 1.5em;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,8 +60,8 @@ header {
 
 footer {
     padding: 20px;
-    border-top: black 1px solid;
-    font-size: 1vw;
+    border-top: 1px solid black;
+    font-size: 1rem;
     text-align: center;
     margin-top: auto;
     width: 95%;
@@ -70,11 +71,11 @@ footer {
 .password-input {
     height: 35px;
     width: 30vw;
-    border: black 1px solid;
-    border-radius: 5px;
+    border: 1px solid black;
+    border-radius: 0.25rem;
     margin: 4px;
     text-align: center;
-    font-size: 1em;
+    font-size: 1rem;
     background: rgba(128, 209, 239, 0.7);
     color: black;
 }
@@ -88,18 +89,19 @@ footer {
     align-items: center;
     text-align: center;
     display: none;
-    border-radius: 20px;
+    border-radius: 0.5rem;
     box-shadow: 0 0 10px #3a3939;
+    padding: 1rem;
 }
 
 .password-button {
     margin-top: 5px;
     background: #4f4e4e;
-    border: 1px #fff solid;
+    border: 1px solid #fff;
     color: white;
     height: 30px;
     width: 50px;
-    border-radius: 5px;
+    border-radius: 0.25rem;
 }
 
 .password-button:hover {
@@ -112,7 +114,7 @@ footer {
 
 .error-message {
     color: red;
-    font-size: 1em;
+    font-size: 1rem;
     margin-top: 5px;
     margin-bottom: 5px;
     margin: 0px 5px;
@@ -122,6 +124,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .modis h1 {
@@ -134,20 +137,20 @@ footer {
     width: 400px;
     height: 400px;
     background-color: #333;
-    border-right: white 1px solid;
-    border-bottom: white 1px solid;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
     margin-right: 1550px;
     margin-bottom: 600px;
     position: absolute;
-    border-bottom-right-radius: 20px;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .modus {
     height: 25vh;
     width: 20vw;
     text-align: center;
-    border: #fff 1px solid;
-    border-radius: 20px;
+    border: 1px solid #fff;
+    border-radius: 0.5rem;
     margin: 10px;
     padding: 10px;
     background-color: rgba(118, 198, 184, 0.7);
@@ -157,13 +160,6 @@ footer {
     vertical-align: top;
 }
 
-.modis {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
 .modis .modus {
     flex: 1 1 30%;
     margin: 10px;
@@ -171,7 +167,7 @@ footer {
 
 .modus span {
     display: block;
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: black;
     margin-top: 10px;
 }
@@ -179,12 +175,12 @@ footer {
 .modus-button {
     color: black;
     background-color: rgba(128, 209, 239, 0.7);
-    border: black 1px solid;
-    border-radius: 5px;
+    border: 1px solid black;
+    border-radius: 0.25rem;
     height: 5vh;
     padding: 0 10px;
     margin-right: 5px;
-    font-size: 1em;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -196,13 +192,13 @@ footer {
 
 .answer-button {
     background-color: rgba(128, 209, 239, 0.7);
-    border: black 1px solid;
+    border: 1px solid black;
     height: 30px;
     width: 20vw;
     color: black;
-    border-radius: 5px;
+    border-radius: 0.25rem;
     margin: 4px;
-    transition: background-color 1.0s ease;
+    transition: background-color 1s ease;
 }
 
 #answers-container {
@@ -212,9 +208,9 @@ footer {
     justify-content: center;
     height: 80%;
     background-color: rgba(118, 198, 184, 0.7);
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-top: #fff 1px solid;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-top: 1px solid #fff;
 }
 
 .answer-button:active {
@@ -222,47 +218,12 @@ footer {
 }
 
 .question-screen {
-    background-color: none;
-}
-
-.next-button {
-    color: black;
-    background-color: rgba(128, 209, 239, 0.7);
-    margin: 5px;
-    align-items: center;
-    justify-content: center;
-    margin-left: 90px;
-    height: 40px;
-    width: 30vw;
-    border: white 1px solid;
-    border-radius: 5px;
-    position: absolute;
-}
-
-.next-button-container {
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-
-.front-image {
-    height: auto;
-    max-width: 70%;
-    padding: 2px;
-    border: white 2px solid;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    object-fit: contain;
-}
-
-.question-screen {
     background: rgba(118, 198, 184, 0.7);
     text-align: center;
     align-items: center;
     height: 350px;
-    border: white 1px solid;
-    border-radius: 20px;
+    border: 1px solid white;
+    border-radius: 0.5rem;
     width: 43%;
 }
 
@@ -271,9 +232,9 @@ footer {
     text-align: center;
     align-items: center;
     height: 300px;
-    border: white 1px solid;
+    border: 1px solid white;
     width: 25%;
-    border-radius: 20px;
+    border-radius: 0.5rem;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -290,8 +251,8 @@ footer {
     margin: 5px;
     height: 30px;
     width: 20vw;
-    border: white 1px solid;
-    border-radius: 5px;
+    border: 1px solid white;
+    border-radius: 0.25rem;
     transition: background 1s ease;
 }
 
@@ -311,10 +272,6 @@ footer {
     color: #077097;
 }
 
-.about:active {
-    
-}
-
 .logout {
     color: black;
     background: none;
@@ -330,7 +287,7 @@ footer {
     .startbutton {
         width: 50%;
         height: 8vh;
-        font-size: 1.2em;
+        font-size: 1.2rem;
     }
 
     footer {
@@ -351,7 +308,7 @@ footer {
     .startbutton {
         width: 80%;
         height: 7vh;
-        font-size: 1em;
+        font-size: 1rem;
     }
 
     footer {

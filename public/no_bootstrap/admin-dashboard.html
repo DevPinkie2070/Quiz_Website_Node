@@ -4,49 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-        .table-dark th, .table-dark td {
-            color: #ffffff;
-        }
-        .refresh-button {
-            background: none;
-            border: none;
-            color: #ffffff;
-        }
-    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Admin Dashboard</h1>
-        <h2 class="mt-4">Benutzerverwaltung</h2>
-        <div class="table-responsive">
-            <table class="table table-dark table-striped" id="userTable">
-                <thead>
-                    <tr>
-                        <th>Benutzername</th>
-                        <th>Email</th>
-                        <th>Quiz 1</th>
-                        <th>Quiz 2</th>
-                        <th>Quiz 3</th>
-                        <th>Rolle</th>
-                        <th>Aktionen</th>
-                        <th>
-                            <button class="refresh-button" onclick="loadUsers()" title="Benutzerliste aktualisieren"><i class="fa-solid fa-arrows-rotate"></i></button>
-                            <button class="refresh-button" onclick="gotoQuiz()" title="Zum Quiz gehen"><i class="fa-solid fa-question"></i></button>
-                            <button class="refresh-button" onclick="gotoBug()" title="Bug Report"><i class="fas fa-bug"></i></button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+    <h1>Admin Dashboard</h1>
+    <h2>Benutzerverwaltung</h2>
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>Benutzername</th>
+                <th>Email</th>
+                <th>Quiz 1</th>
+                <th>Quiz 2</th>
+                <th>Quiz 3</th>
+                <th>Rolle</th>
+                <th>Aktionen</th>
+                <th><button class="refresh-button" onclick="loadUsers()"><i class="fa-solid fa-arrows-rotate"></i></button>
+                <button class="refresh-button" onclick="gotoQuiz()"><i class="fa-solid fa-question"></i></button></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
     <script>
         async function loadUsers() {
@@ -69,9 +48,9 @@
                     <td>${user.quiz_3}</td>
                     <td>${user.role}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})" title="Benutzer löschen"><i class="fas fa-trash-alt"></i></button>
-                        <button class="btn btn-warning btn-sm" onclick="changeRole(${user.id})" title="Rolle ändern"><i class="fa-solid fa-user-tie"></i></button>
-                        <button class="btn btn-info btn-sm" onclick="changePassword(${user.id})" title="Passwort ändern"><i class="fas fa-key"></i></button>
+                        <button onclick="deleteUser(${user.id})"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="changeRole(${user.id})"><i class="fa-solid fa-user-tie"></i></button>
+                        <button onclick="changePassword(${user.id})"><i class="fas fa-key"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -126,10 +105,6 @@
 
         function gotoQuiz() {
             window.location.href = '/quiz';
-        };
-
-        function gotoBug() {
-            window.location.href = '/quiz/bug';
         };
     </script>
 </body>

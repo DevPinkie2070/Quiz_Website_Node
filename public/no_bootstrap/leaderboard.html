@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Leaderboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: rgb(181, 248, 235);
+      margin: 0;
+    }
+    header {
+      background-color: rgba(118, 198, 184, 0.7);
+      color: black;
+      padding: 1rem 0;
+      text-align: center;
+      font-size: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    #quiz-selector {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    #quiz-selector button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: 1px solid black;
+      border-radius: 5px;
+      background: rgba(128, 209, 239, 0.7);
+      color: black;
+      cursor: pointer;
+      transition: background 1.0s ease;
+    }
+    #quiz-selector button:hover {
+      background: black;
+      color: rgb(128, 209, 239);
+    }
+    #quiz-selector button:active {
+      background: #0e0e0e;
+    }
+    #leaderboard {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(118, 198, 184, 0.7);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: black;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f8f8;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f8f8f8;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button style="position: absolute; top: 20px; left: 10px; padding: 5px 10px; font-size: 1rem; border: none; border-radius: 5px; background: none; color: black; cursor: pointer;" onclick="window.location.href='/quiz'"><i class="fa-regular fa-circle-left"></i></button>
+    Quiz Leaderboard
+  </header>
+
+  <div id="quiz-selector">
+    <button onclick="fetchLeaderboard('quiz_1')">Logos</button>
+    <button onclick="fetchLeaderboard('quiz_2')">Allgemeinwissen</button>
+    <button onclick="fetchLeaderboard('quiz_3')">Informatik</button>
+  </div>
+
+  <div id="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Platz</th>
+          <th>Benutzername</th>
+          <th>Punkte</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr>
+          <td colspan="3" style="text-align: center;">Bitte wähle ein Quiz aus</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchLeaderboard(quiz) {
+      const response = await fetch(`/leaderboarddata?quiz=${quiz}`);
+      if (!response.ok) {
+        alert("Fehler beim Abrufen des Leaderboards.");
+        return;
+      }
+      const data = await response.json();
+
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      leaderboardBody.innerHTML = ''; // Bestehenden Inhalt löschen
+
+      if (data.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td colspan="3" style="text-align: center;">Keine Ergebnisse verfügbar</td>
+        `;
+        leaderboardBody.appendChild(row);
+        return;
+      }
+
+      data.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${entry.username}</td>
+          <td>${entry.score}</td>
+        `;
+        leaderboardBody.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
