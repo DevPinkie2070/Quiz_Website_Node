@@ -114,3 +114,46 @@ button:hover {
         font-size: 1em;
     }
 }
+
+/* Responsivität */
+@media (max-width: 768px) {
+    header {
+        font-size: 6vw;
+    }
+
+    table {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    button {
+        width: 50%;
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        font-size: 10vw;
+    }
+
+    table {
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    button {
+        width: 80%;
+        font-size: 1em;
+    }
+
+    #passwordChangeForm {
+        width: 80vw;
+        height: auto;
+        padding: 20px;
+    }
+}
